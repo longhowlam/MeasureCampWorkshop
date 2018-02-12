@@ -1,0 +1,948 @@
+---
+title: 'Avond Sessie 01: Data types/structures'
+subtitle: "Inleiding R"
+author: "Longhow Lam"
+output:
+   prettydoc::html_pretty:
+     highlight: github
+     theme: cayman
+     toc: true
+     toc_depth: 2
+     number_sections: true
+   pdf_document:
+     toc: yes
+     toc_depth: '2'
+   html_notebook:
+     theme: sandstone
+     toc: true
+     toc_depth: 2
+     toc_float: true
+     number_sections: true
+---
+
+---
+
+<br>
+
+
+# Inleiding.
+
+---
+
+## De RStudio omgeving
+
+Begin met powerpoint slides over R gevolgd door intro in RStudio:
+
+* Console,
+* Script windows,
+* Environment tab (Object browser),
+* Packages.
+
+![](RStudio.png)
+
+## R Projecten
+
+Organiseer je R werk in projecten. Een project kan bestaan uit verschillende scripts, notebooks, data en output, deze wil je handig in 1 folder hebben. In RStudio kan je heel handig met verschillende R projecten werken. Via de GUI kun je nieuwe projecten aanmaken en beheren: File > New Project...
+
+
+
+## Scripts 
+
+Scripts, zijn gewone tekst files (*.R) met R code. In RStudio kan je meerdere scripts openen en bewerken. Scripts die bij elkaar horen kan je in een R Project zetten. Via het File menu > New File > R Script kan je in RStudio een nieuw R script file maken. Of gebruik de short cut: Ctrl+Shift+N.
+
+In een script type je R code en als je met de cursor op een regel staat kan je die regel code runnen door Ctrl+Enter in te drukken. Je kan ook meerdere regels selecteren en deze regels runnen door Crtl+Enter. Zie voor meer opties het Code menu en 'Run Region'.
+
+
+## R Notebooks
+
+R notebooks bevatten meer dan alleen R code, het is een 'compleet' document met R code, output en een beschrijvende verhaallijn. In een R project kun je ook meerdere van deze notebooks en scripts beheren. Notebooks maak je met Rmarkdown, een soort light weight markup language waarin je bijvoorbeeld headers, figuren en vet gedrukt kan specificeren. Deze R cursus werkt met R notebooks. Een notebook bevat **R code chunks** die je kan runnen.
+
+Als je op de 'Preview' knop drukt boven het R notebook krijg je een apart window te zien met het **resultaat van het R notebook**. Er wordt dan ook door RStudio een aparte file gemaakt die de naam <file_naam>.nb.html heeft. Dit is een html file die je kan delen met anderen.
+ 
+Naast de nb.html, kan je een R notebook ook "knit" ('breien') tot een html, pdf of Word document. De header van het markdown document vertelt hoe het een en ander gebreid moet worden. Zie bijvoorbeeld dit document. Naast de 'Preview' knop zie je een pijltje waaruit je kan kiezen.
+
+
+## De R Console
+
+De R Console is een plek waar je snel even een kort stukje code wilt runnen. Type daar een R expressie in en Enter om te runnen. Output van scripts verschijnt ook in de R Console.
+
+## Git version controle
+
+Git is een version control systeem. In RStudio kan je makkelijk git gebruiken. Je zult het wel eerst moeten installeren. Op windows kan je git installeren via [de git site](https://git-scm.com/download/win). We gaan hier in deze cursus verder niet op in.
+
+## Een paar simpele expressie
+
+Hieronder een paar simpele expressies in R om te beginnen
+
+```{r, eval=FALSE}
+1 + 1
+print("hello world")
+
+## assignment kan je = of <- gebruiken,
+## pijltje stamt nog uit een tijd waar het een toets op het toetsenbord was
+
+## Als je onderstaande regel runt wordt het object test gemaakt, je ziet nog verder niks
+test = 9
+
+## Om te zien wat er in het object test zit moet je het printen
+## Dit doe je door het volgende code te runnen, nu zie je iets verschijnen
+print(test)
+
+## Omdat je best vaak snel wilt zien wat er in een object zit volstaat alleen de naam ook
+## dus run de volgende regel
+test
+
+## als een object al bestaat wordt die zonder waarschuwingen overschreven
+test <- 3
+test
+```
+
+In R zijn namen van objecten **case-sensitive!**, en we zien dat hekje `#` gebruikt wordt om commentaar in code te plaatsen. Alles na een hekje wordt niet niet gerund.
+
+```{r, eval=FALSE}
+x = 8
+X = 8
+
+ls()
+
+786 / (87 +87)
+
+## wat wiskundige berekeningen
+pi / asin(1)
+exp(1) 
+log(10)
+
+##### integer delingen
+
+# dertien delen door 5
+13 / 5
+# 5 past twee keer in 13
+13 %/% 5
+# en dan blijft er een rest van 3 over
+13 %% 5
+```
+
+
+Help in R is <F1> op een functie.  F1 op de functie: cut
+
+<br>
+
+# Data types
+
+---
+
+Alle data in R is van een bepaalde type, we zullen de verschillende types hieronder behandelen. met de functie `typeof` kan je het type altijd opvragen van een object in R.
+
+## integer
+
+Integers in R zijn gehele getallen.
+
+```{r, eval=FALSE}
+x = 1
+y = 2
+
+is.integer(x)
+
+x = as.integer(1)
+z = x + 9.78
+
+is.integer(z)
+
+y = 34L
+is.integer(y)
+```
+
+## character
+
+In R kan je met het `character` data type teksten (of ook soms strings genoemd) opslaan. Bewerkingen en manipulaties van characters in sessie 2.
+
+```{r, eval=FALSE}
+x1 = "Longhow Lam"
+x2 = "1628 AA Hoorn"
+
+is.character(x1)
+
+nchar(x2)
+
+x3 = paste(x1, x2)
+x3 = paste(x1, x2, sep="")
+```
+
+
+## factor
+
+In R zijn `factors` bedoeld om categorische variabelen te representeren. Denk aan geslacht, of opleiding. Verwar een factor niet met het type character, je kan factor variabelen wel van character variabelen maken. In sommige predictive modeling functies heb je expliciet factor variabelen nodig en niet character.
+
+
+In data sets zijn vaak namen of achternamen van personen van het type character, maar bijvoorbeeld geslacht of opleiding van het type factor.
+
+```{r, eval=FALSE}
+x3 = c("M", "F", "M")
+
+is.character(x3)
+typeof(x3)
+
+y3 = as.factor(x3)
+x3
+y3
+```
+
+Dit is wel apart
+
+```{r, eval=FALSE}
+typeof(y3)
+is.character(y3)
+is.factor(y3)
+is.integer(y3)
+
+levels(y3)
+levels(x3)
+
+# Dus let op het verschil tussen factors en characters!!!!
+```
+
+Soms is een order in de levels aan wezig, in R kan je dat ook expliciey aangeven met ordered factors. Stel dat je een inkomen object hebt met vier observaties: Laag, hoog, medium en medium.
+
+```{r}
+inkomen = as.factor(
+  c("laag", "hoog", "medium", "medium")
+)
+
+as.integer(inkomen)
+# medium is naar 3 vertaald, want medium is alfabetisch het hoogst.
+
+inkomen = ordered(inkomen, levels = c("laag", "medium", "hoog"))
+```
+ 
+
+## double
+
+De doubles in R zijn vaak gebruikt om alledaagse (niet noodzakelijk gehele) getallen te representeren. Bijvoorbeeld lengte, 1.85 of gewicht 78.8 zijn niet gehele getallen
+
+```{r, eval=FALSE}
+x4 = 4
+x5 = 5.6 / 8
+
+x6 = pi/2
+
+is.double(x4)
+
+x7 = 4L
+is.double(x7)
+
+# in tegenstelling tot sommige andere talen kan je in R double en integers in berekeningen 
+# zonder vertalingen gebruiken
+
+x8 = x4 + x7
+typeof(x8)
+```
+
+
+## logical
+
+Als je in R een test uitvoert, dan is het resultaat van het type `logical`. We zagen al de functies `is.double` en `is.integer`.
+
+```{r, eval=FALSE}
+x7 = TRUE
+x8 = FALSE
+
+typeof(x7)
+
+x9 = x6 < 8
+
+is.logical(x9)
+
+x1 = as.integer(1)
+x2 = 1
+
+x1
+x2
+```
+
+Merk op dat in R, een double gelijk kan zijn aan een integer, in andere talen kan dit anders zijn.
+
+```{r, eval = FALSE}
+is.integer(x2)
+is.integer(x1)
+
+x1 == x2
+```
+
+Het volgende blokje code laat logische operatoren zien.
+
+```{r, eval=FALSE}
+# ampersand is testen op "DIT"" EN "DAT""
+TRUE & FALSE    # AND
+
+x = 9
+x < 10 & x > 5
+
+# negatie, tegenovergestelde
+!TRUE           # NOT
+!FALSE
+
+# vertical pipe is testen op "dit"" OF "dat""
+TRUE | FALSE    # OR
+x < 7 | x > 8
+```
+
+Je kan rekenen met logicals
+
+```{r, eval = FALSE}
+TRUE + TRUE
+FALSE + FALSE + TRUE
+
+### What the F...
+
+0.1 + 0.2 == 0.3
+
+1 + 2 == 3
+x = 0.3
+
+sprintf("%.16f", x)
+sprintf("%.24f", x)
+```
+
+
+## oneindig
+
+In R is er een speciaal symbool voor oneindig.
+
+```{r, eval=FALSE}
+x1 = 9/0
+x2 = -x1
+x1
+is.infinite(x2)
+```
+
+## missing value
+
+Missende waarden kunnen in R worden gerepresenteerd met `NA`. Je kan missende doubles, integers etc. hebben.
+
+```{r, eval=FALSE}
+x3 = NA
+
+# gebruik is.na om te checken of iets NA is
+is.na(x3)
+
+# een rijtje getallen waarbij eentje missend is
+x4 = c(1, 2, 3, 4, NA, 5, 7)
+
+# hoeveel elementen zijn NA en niet NA
+sum(is.na(x4))
+sum(!is.na(x4))
+
+x4 < 4
+
+is.na(x4)
+```
+
+
+## Waar zijn mijn objecten
+
+Als je in R een aantal objecten hebt gemaakt dan staan deze in de zogenaamde 'Global Environment'. Je ziet de objecten terug in de 'Environment' window, of je kan ze met functies opvragen.
+
+```{r, eval=FALSE}
+# Opvragen van objecten in R
+ls()
+objects()
+```
+
+Als je R opstart dan zijn er ook een aantal libraries aanwezig, daar staan ook objecten in. Wat is een search path...
+
+```{r, eval=FALSE}
+Pietje  # wordt niet gevonden
+cars # wordt wel gevonden
+
+### Objecten worden volgens een zoekpad gezocht
+search()
+
+objects(pos = 5)
+
+## deze worden wel gevonden
+
+OrchardSprays
+iris
+iris = 9
+
+## wat zit er nu in iris en is mijn oude iris niet weg??
+iris
+```
+
+Ook via de 'Environment' window kan je zien welke objecten er in libraries zijn.Selecteer i.p.v. 'Global Environment' een andere library.
+
+### Het weghalen van objecten
+
+```{r, eval=FALSE}
+x = 5
+rm(x)
+
+## standaard alleen objecten weg te halen uit de work directoy, je 'huidige sessie'
+
+iris
+rm(iris)
+
+datasets::iris
+
+rm(iris)
+
+########   bewaren van objecten en work directory
+x = 45
+
+# bewaar een specifiek object
+saveRDS(x, file = "ObjectX.Rds")
+
+# bewaar een heel image,  dit wordt standaard gevraagd als je Rstudio afsluit
+save.image()
+```
+
+Ook via de 'Environment' window kan je objecten weghalen. In een keer alles via het 'bezempje', of als je in plaats van 'List mode' naar 'Grid mode' gaat, kan je objecten selecteren die je weg wilt halen.
+
+<br>
+
+
+# Data structures
+
+---
+
+Data in R kan in verschillende vormen verschijnen, de zogenaamde data structuren. We zullen hieronder een aantal basis structuren behandelen.
+
+## vectors
+
+Vectoren worden gebruikt om een 'rijtje' elementen op te slaan. Je kan een vector van doubles hebben, characters etc... Alle elementen kunnen alleen van hetzelfde type zijn!
+
+```{r, eval=FALSE}
+## een getal is ook al een vectpr, van lengte 1
+x0 = 1
+
+x1 = c( 1, 2, 3, 4, 5)
+length(x1)
+class(x1)
+
+x2 = c(2L, 3)
+typeof(x2)
+
+x3 = c("p", 2)
+```
+
+Er zijn diverse functies in R die je kan gebruiken om vectoren te genereren zonder alle elementen een voor een in te typen :-)
+
+```{r, eval = FALSE}
+x1 = 1:1000
+x1 = 187:278
+
+x2 = seq(1, 50, length=100)
+x2a = seq(1,500, by = 20)
+
+## samenvoegen van twee of meer vectoren
+x3 = c( x0, rnorm(100))
+
+class(x4)
+```
+
+
+Het genreren van wat random getallen is handig om snel wat data te hebben om te testen, in R zijn er diverse functies.
+
+```{r, eval=FALSE}
+# normaal verdeelde getallen
+rnorm(100)
+rnorm(100, 9, 2)
+
+#uniform verdeelde getallen
+runif(100)
+runif(100,8,10)
+
+# trekken uit een vector
+x4 = sample( letters, rep = TRUE, size = 100)
+```
+
+
+Berekeningen op vectoren gebeuren elements-gewijs
+
+```{r, eval=FALSE}
+y = 3 * x3 + 8
+
+## en wat is dit???
+y = x4 + 8
+
+x4 = rep(1:6, 7)
+x4 = rep(x4,8)
+
+x5 = rep(1:10, each = 3)
+```
+
+De functie `cut` om factor vectoren te maken uit double vectoren
+
+```{r}
+x <- rnorm(100)
+y <- cut(x, 4)
+```
+
+
+
+### subscripting of vectors
+
+Hoe benader je elementen in een vector? Dat kan met subscripts
+
+```{r, eval=FALSE}
+## R begint te tellen bij 1
+x3 = 100:200
+
+## subscripts zijn : 1 getal, een vector van getallen, negatieve getallen
+x3[1]
+x3[  4:10  ]
+x3[  -(1:10)]
+
+## gebroken kan ook...
+x3[8.9]
+
+## je kan met subscripts ook elementen veranderen
+x3[  8:17  ] = 0
+```
+
+Je kan ook een vector van TRUE/FALSE opgeven als subscript.
+
+```{r, eval=FALSE}
+x = rnorm(100)
+x[x > 2]
+
+```
+
+Een paar simpele functies die je op vectoren kan toepassen
+
+```{r, eval=FALSE}
+y = rnorm(1000)
+
+mean(y)
+var(y ) 
+min(y)
+sd(y)
+max(y)
+summary(y)
+
+sum(y < 0)
+```
+
+
+##  Matrices
+
+Een matrix is een verzameling van vectoren die even lang zijn. Je kan rechthoekige (aantal rijen anders dan aantal kolommen) of vierkande matrices (aantal rijen = aantal kolommen) hebben.
+
+```{r, eval=FALSE}
+## maak een matrix van een vector
+m1 = rnorm(100)
+m2 = matrix(m1, byrow = FALSE, ncol=10)
+m2
+dim(m2)
+class(m2)
+
+## maak een matrix van een aantal vectoren
+x = 1:10
+y = 10:1
+z = 11:20
+
+m3 = cbind(x,y,z)
+m4 = rbind(x,y,z)
+```
+
+Net als vectoren kan je elementen in een matrix benaderen met subscripts, hieronder volgen een aantal voorbeelden.
+
+```{r, eval = FALSE} 
+m2[1,5]
+
+m2[  4:10,    3:5]
+
+m2[5,]
+
+m2[ ,5]
+```
+
+Met matrices kun je rekenen. Een paar typische matrix bewerkingen.
+
+```{r, eval =FALSE}
+# determinant van een matrix
+det(m2)
+
+# matrix transponeren
+t(m2)
+
+# inverse van een matrix
+solve(m2)
+
+# er zijn twee soorten vermenigvuldigingen van matrices
+m2 %*% solve(m2)
+m2 * solve(m2)
+
+round(m2 %*% solve(m2))
+```
+
+## multidimensional arrays
+
+In R zijn arrays eigenlijk multi-dimensionale matrices. In 3 dimensies zijn het eigenlijk 'blokken' van getallen.
+
+```{r, eval=FALSE}
+m = array(1:1000, dim = c(10,10,10))
+
+m[1,5,7]
+
+m[1,4,  ]
+
+m[,4,]
+class(m)
+```
+
+
+## data frames
+
+Een data frame kan je zien als een matrix, maar in tegenstelling tot een matrix, kunnen kolommen van een data frame van een andere type zijn. Voor data analyse met 'echte' data zal een data.frame de meest handige structuur zijn. je hebt bijvoorbeeld een factor kolom 'Geslacht', een double kolom met bijvoorbeeld 'geweicht' en je kan een character kolom hebben met 'achternaam'.
+
+
+```{r, eval=FALSE}
+x1 = 1:100
+x2 = rnorm(100)
+x3 = rnorm(100)
+x4 = sample(c("M","F"), size = 100, replace = TRUE)
+
+df1 = data.frame(
+  kolomnaampj1 = x1,
+  income = x2,
+  age = x3,
+  type = x4
+)
+
+# laat eerste 10 rijen zien
+head(df1,10)
+```
+
+De volgende functies kan je gebruiken om wat extra info van een data frame te laten zien.
+
+```{r, eval=FALSE}
+# laat de namen van de kolommen zien
+names(df1)
+
+# names kan je ook gebruiken om bestaande kolomnamen te wijzigen
+df2 = df1
+names(df2) = c("A", "B", "C", "D")
+
+# dimensie en classe
+dim(df1)
+class(df1)
+
+# De levels van kolom 'type' uit mydf
+levels(mydf$type)
+
+### pas op met characters die worden standaard in data.frame naar factors omgezet
+x4
+class(x4)
+class(df1$type)
+
+mydf = data.frame(kolomnaampj1 = x1, income = x2, age=x3, type = x4, stringsAsFactors = FALSE)
+mydf
+class(mydf$type)
+
+## Dit is ook in de Environment viewer te zien
+```
+
+Je kan net als bij matrices subscripts gebruiken in data frame om bepaalde data uit een data.frame te halen
+
+```{r, eval=FALSE}
+df1[1,3]
+df1[11:20,]
+
+df1[, 2:3]
+df1$income
+
+## kolom toevoegen
+df1$NEW = df1$income / 100
+df1
+```
+
+
+## tibbles
+
+In R zijn tibbles een soort moderne versie van data.frames, afkomstig van Hadley Wickham en er zijn een aantal voordelen om tibbles te gebruiken. Ze hebben een iets betere print methode en transformeren nooit character naar factor.
+
+Zie ook zijn boek en de website [tibbles.](http://tibble.tidyverse.org/)
+
+```{r, eval=FALSE}
+library(tibble)
+
+x1 = 1:100
+x2 = rnorm(100)
+x3 = rnorm(100)
+x4 = sample(c("M","F"), size = 100, replace = TRUE)
+
+tb1 = tibble(
+  kolomnaampj1 = x1,
+  income = x2,
+  age = x3,
+  type = x4
+)
+
+## output in notebooks is niet verschillend maar in de console zie je dat wel
+df1
+tb1
+
+## extraheren van column is consistent
+df1[,1:2]
+df1[,1]
+
+tb1[,1:2]
+tb1[,1]
+```
+
+Om een eerste indruk te krijgen van wat er in een data.frame zit kan je `summary` of `skimr` gebruiken
+
+```{r, eval = FALSE}
+summary(mtcars)
+summary(iris)
+```
+
+Het package `skimr` moet je eerst installeren.
+
+```{r, eval = FALSE}
+devtools::install_github("hadley/colformat")
+devtools::install_github("ropenscilabs/skimr")
+
+library(skimr)
+skimr::skim(mtcars)
+skim(iris)
+```
+
+
+## lists
+
+In R zijn lijsten de meest generieke data structuur, het kan beschouwd worden als een verzameling van andere data structuren. Een lijst kan een lijst bevatten, en lijsten zijn soms het resultaat van een functie die allerlei dingen terug geeft in een lijst.
+
+```{r, eval=FALSE}
+m2 = matrix(rnorm(100), ncol=10)
+mydf = mtcars
+
+## stop een paar objecten in een lijst
+l1 <- list( a = 1, b = 1:100, c = m2, d = mydf)
+
+## een lijst kan weer een lijst bevatten
+l2 <- list (zz = rnorm(100), pp = l1)
+```
+
+Lijsten bestaan uit verschillende componenten, hoe benader je die componenten of hoe krijg je dingen uit een lijst? Dit kan met subscripts of met de naam.
+
+```{r, eval=FALSE}
+## subscripts
+l2[[1]]
+l2[1]
+
+l2[[2]][[4]][[3]][5:9]
+
+## of bij naam
+l1$age[5:9]
+
+l1[[3]]
+
+l1$c[1,4]
+l1[[4]]$x2[3]
+```
+
+Je kan aan een lijst altijd nog extra componenten toevoegen.
+
+```{r, eval=FALSE}
+l1$PP = 1
+
+# overzicht van componenten in een lijst
+names(l1)
+
+# component 6 kan ook gewijzigd worden.
+l1[[6]] = 8
+
+## dit vult de lijst aan met componenten 7, 8 die NULL zijn
+l1[[9]] = 100
+l1
+```
+
+
+##  functions in R
+
+We zullen hier heel kort functies in R behandelen. Een functie is ook een object zoals we diverse objecten al in R hebben. We kunnen zelf ook een functie schrijven.
+
+```{r, eval=FALSE}
+x = 1:10 
+y = 1:10
+
+# dit is geen functie....
+f1 <- x + y
+```
+
+Gebruik `function` om zelf een functie te schrijven. Twee simpele voorbeelden:
+
+```{r, eval=FALSE}
+f1 = function(x, y){
+  t1 = 2*y
+  t2 = 3*x
+  t1 + t2
+}
+
+## De laatste regel wordt geretourneerd
+f1(8,6)
+```
+
+
+Als je de functie eerder wilt verlaten met een waarde, gebruik dan `return` in de functie.
+
+```{r, eval=FALSE}
+f2 = function(x){
+  if (x < 0){
+    return(1)
+  }
+  else
+  {
+    return(0)
+  }
+}
+
+f2
+f2(-9)
+
+## a simple loop to calculate a sum
+
+f3 = function(x)
+{
+  n = length(x)
+
+  out = 0  
+  for(i in 1:n)
+  {
+    out = out + x[i] 
+  }
+  return(out)
+}
+
+f3( 1:1000)
+
+# natuurlijk doen we gewoon
+sum(1:1000)
+```
+
+
+
+###   The %>%  pipe (or chain) operator
+
+The chain operator gebruik je om het resultaat van een functie aan een andere functie mee te geven. De code hieronder geeft een heel simpel voorbeeldje
+
+```{r, eval=FALSE}
+tan(cos(sin(0.33)))
+
+0.33 %>% sin %>% cos %>% tan
+
+0.33 %>% 
+  sin %>%
+  cos %>% 
+  tan
+```
+
+Meestal wordt dit gebruikt om code leesbaarder te maken en we komen hier in avond sessie 2 verder op terug.
+
+<br>
+
+
+# Importeren / exporteren van data 
+
+---
+
+Als je met R werkt heb je natuurlijk data nodig, zoals we op bovenstaande manier data hebben gemaakt zal het in de praktijk niet gebeuren met echte data sets. Die leven in data bases of in files
+
+## Inlezen files
+
+Er zijn een aantal packages die handig zijn om files in te lezen.
+
+* `readr` package, voor tekst files
+* `haven` package voor files van SAS, SPSS, Stata
+* `readxl` voor Excel files
+
+R heeft ook standaard functies voor het inzegen van text files, maar ik gebruik vaak de functies uit het package `readr`. Voor grote files is het veel sneller. En je ziet dan ook een progress bar. In RStudio, kan je de import functies ook aanroepen via de ** Import Dataset ** GUI die het inlezen van data begeleidt.
+
+
+```{r, eval=FALSE}
+### data met restaurants in Nederland
+library(readr)
+Restaurants = read_csv("data/Restaurants.csv")
+
+### Excel files inlezen
+library(readxl)
+test = read_excel(
+  "data/test.xlsx",
+  range = "D8:F14"
+)
+```
+
+
+## R Datasets
+
+Je kan R objecten (niet alleen data frames) weg schrijven met de `saveRDS` functie, en deze kunnen weer ingelezen worden met de `readRDS` functie. files die je krijgt zijn binaire bestanden, ze kleiner dan tekst files en zijn sneller om weer in R in te lezen.
+
+```{r, eval=FALSE}
+x = rnorm(100)
+saveRDS(x, "data/x.RDs")
+
+rm(x)
+x = readRDS("data/x.RDs")
+
+GasPedaal = readRDS("data/AllCarsGasPedaal.Rds")
+```
+
+
+## Inlezen uit een data base
+
+Er zijn verschillende packages om data te lezen uit een data base, dit is afhankelijk van de data base. De library `RODBC` gebruik ik bijvoorbeeld om data uit onze SQL Server data base te lezen.
+
+```{r, eval=FALSE}
+library(RODBC)
+# nodig dat MSSQLSERVER service gestart moet worden
+
+# specificeer connectie
+cn <- odbcDriverConnect(connection="Driver={SQL Server Native Client 11.0};server=localhost;database=Testing;trusted_connection=yes;")
+
+sqlTables(cn, schema ="dbo")
+
+RandomPersons = sample_n(VA_RANDOM_PERSONS, 75000)
+
+# haal data uit SQLSERVER
+sqlFetch(cn,"cars")
+
+# schrijf weg
+sqlSave(cn, RandomPersons)
+```
+
+
+
+# Nog iets over geheugen gebruik
+
+R verwerkt alles in het RAM geheugen van de computer. Het is handig om te weten hoe veel geheugen R verbruikt en hoe groot objecten zijn. Het package `pryr` bevat een aantal handig functies.
+
+```{r, eval=FALSE}
+library(pryr)
+
+### hoeveelgeheugen kost een object met 1 miljoen getallen
+x = rnorm(1e6)
+object_size(x)
+
+### hoeveel geheugen hebben we in totaal verbruikt
+mem_used()
+
+### verandering van geheugen
+mem_change(
+  y <- rnorm(1e7)
+)
+mem_used()
+
+
+### verwijder een object
+rm(y)
+mem_used()
+
+```
+
+Via de 'Environment' tab kan je ook per object makkelijk zien hoe groot het is. Verander van 'List' view naar 'Grid' view.
+
+
+
+EINDE SESSIE

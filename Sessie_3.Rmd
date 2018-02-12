@@ -1,0 +1,1022 @@
+---
+title: "Avond Sessie 03: Data visualisatie"
+subtitle: "Inleiding R"
+author: "Longhow Lam"
+output:
+  prettydoc::html_pretty:
+    highlight: github
+    theme: cayman
+    toc: true
+    toc_depth: 2
+    number_sections: true
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+  html_notebook:
+    theme: sandstone
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    number_sections: true
+---
+
+---
+
+<br>
+
+
+```{r, eval=FALSE, include=FALSE}
+library(stringr)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(plotly)
+library(readr)
+
+library(RColorBrewer)
+library(colorRamps)
+library(leaflet)
+library(visNetwork)
+library(rgeos)
+library(raster)
+library(sp)
+library(maptools)
+library(rgdal)
+```
+
+
+# Inleiding 
+
+---
+
+Er zijn veel mogelijkheden om data te plotten in R. In deze sessie zullen we een aantal type plots behandelen:
+
+* (heel kort) traditionele plots,
+* ggplot2,
+* interactieve plots.
+
+<br>
+
+# Traditional plots in R
+
+---
+
+Deze plots zijn sinds het begin van R al aanwezig, ik noem ze hier alleen heel even, maar ik wil er eigenlijk niet veel aandacht  aan besteden omdat ik vind dat ze achterhaald zijn. Toch gebruik ik ze stiekem soms wel heel snel.
+
+De algemene functie is `plot`, deze accepteert verschillende data structuren.
+
+```{r, eval=FALSE}
+## vectoren
+x = rnorm(100)
+plot(x) 
+
+y = runif(100)
+plot(x,y)
+
+plot(mtcars)
+plot(mtcars %>% select(mpg,cyl,hp))
+```
+
+Een histogram kan je snel maken met de functie `hist`, deze accepteert een vector van getallen.
+
+```{r, eval=FALSE}
+hist(x)
+
+## teksten op een plaatje 
+plot(x,y)
+text(x,y,"pp")
+```
+
+
+<br>
+
+# De ggplot2 library van Hadley Wickham,  
+
+---
+
+The grammar of graphics: ggplot2. Een plot wordt gemaakt door layers op elkaar te leggen, elke laag kan worden beschreven met zogenaamde *aesthetics* (stijlen). Elke laag kan in een variabele opgeslagen worden en deze kunnen bij elkaar 'opgeteld' worden tot een uiteindelijke plot. 
+
+Hieronder een eerste voorbeeldje van een ggplot op de `mtcars` data set.
+
+```{r, eval=FALSE}
+## een laag p
+p = ggplot(mtcars, aes(x=hp, y = mpg))
+
+## wat is p
+class(p)
+typeof(p)
+
+## voeg een laag punten toe
+p = p + geom_point(alpha = 0.4)
+```
+
+
+Laat de plot zien door hem te 'printen'.
+
+```{r, eval=FALSE}
+p
+
+q = geom_point(aes(x = hp, y = cyl), col=2)
+r = p + q
+r
+
+## Een titel is ook een laag
+p = p + 
+  ggtitle("AUTO PLOTS \n EEN VOORBEELDJE") 
+p
+```
+
+De algemene graphing template in ggplot heeft de volgende vorm:
+
+```{r, eval=FALSE, include=FALSE}
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
+```
+
+## geom_... functies
+
+Er zijn diverse geom_... functies, we zullen hieronder er een paar laten zien. 
+
+Histogrammen zijn een handige manier om snel een indruk te krijgen van de verdeling van de data
+
+```{r, eval=FALSE}
+#### histogrammen
+p = ggplot(data = mpg, aes(displ)) 
+  
+p + geom_histogram()
+
+## er zijn diverse opties die je mee kunt geven
+p + geom_histogram(
+  bins = 10,
+  col="red",
+  fill="green", 
+  alpha = .82
+) 
+```
+
+Box plots kan je ook gebruiken om een indruk te krijgen van de verdeling van de data. Ze bevatten visueel wat minder detail dan histogrammen, maar je kan er makkelijk een aantal naast elkaar zijn. We gebruiken de `mpg` data set en kijken naar de verdeling van highway miles per gallon (hwy) voor verschillende type autos.
+
+```{r, eval=FALSE}
+p = ggplot(mpg, aes(class, hwy)) + geom_boxplot()
+p
+```
+
+Je kan ook groupeerde boxplots maken en de volgorde van de boxplots wijzigen, bijvoorbeeld op aflopende mediaan.
+
+```{r, eval=FALSE}
+p = ggplot(
+  mpg,
+  aes(
+    reorder(
+      class,
+      hwy,
+      median
+    ),
+  hwy, 
+  fill = factor(year)))
+
+p + geom_boxplot()
+```
+
+## lijn grafieken
+
+Lijn grafieken zijn handig om tijdreeksen te visualiseren
+
+```{r, eval=FALSE}
+df = data.frame(x=1:100, y=rnorm(100))
+
+p = ggplot(
+  df, 
+  aes(x=x,y=y)
+  )
+
+p + geom_line()
+p + geom_line(color="blue", size = 2)
+```
+
+When the x values are dates ggplot will take care of it!
+
+```{r, eval=FALSE}
+df = data.frame(
+  x = anytime::anydate("2017-01-01") + 1:100,
+  y = rnorm(100)
+)
+
+p = ggplot(
+  df, 
+  aes(x=x,y=y)
+  )
+
+p + geom_line()
+```
+
+## bar plots
+
+Bar plots zijn handig om bijvoorbeeld aantallen per categorie te visualiseren. Laten we naar top 10 keukens kijken in 'restaurant' data. Deze data heb ik een tijdje geleden van de site Iens gescraped, er staan 20.000 restaurants in met een aantal kenmerken.
+
+```{r, eval=FALSE, fig.width=10, fig.height=8}
+restaurants = read_csv("data/Restaurants.csv")
+
+restaurants %>%
+  group_by(keuken) %>%
+  summarise(n=n()) %>%
+  arrange(desc(n)) %>% 
+  filter(!is.na(keuken)) %>%
+  slice(1:10) %>%
+  ggplot(aes(x=keuken)) + 
+  geom_bar(aes(weight=n))
+```
+
+Je kan sorteren 
+
+```{r, eval=FALSE, fig.width=12}
+restaurants %>%
+  group_by(
+    keuken
+  ) %>%
+  summarise(
+    n=n()
+  ) %>%
+  filter(!is.na(keuken)) %>%
+  slice(1:10) %>%
+  mutate(
+    keuken = forcats::fct_reorder(keuken, n)
+  ) %>%
+  ggplot(aes(x=keuken)) + 
+  geom_bar(aes(weight=n))
+
+```
+
+Je kan stacked en of grouped bar charts maken om meer dimensies te visualiseren
+
+```{r, eval=FALSE}
+test = restaurants %>% 
+  filter(
+    plaats %in% c("Rotterdam", "Utrecht", "Amsterdam")
+  ) %>%
+  group_by(
+    keuken, plaats
+  ) %>%
+  summarise(n=n()) %>%
+  filter(
+    !is.na(keuken)
+    ) 
+   
+##  in de aes kun je fill opgeven en met position kan je stacked of grouped opgeven 
+test %>%
+  ggplot(aes(x=keuken, y = n, fill = plaats)) + 
+  geom_bar(stat="identity")
+
+test %>%
+  ggplot(aes(x=keuken, y = n, fill=plaats)) + 
+  geom_bar(stat="identity", position = "dodge") 
+```
+
+Soms wil je horizontale barcharts, gebruik dan nog een extra coordinate flip.
+
+```{r, eval=FALSE}
+test %>%
+  ggplot(aes(x=keuken, y = n, fill=plaats)) + 
+  geom_bar(stat="identity", position = "dodge") +
+   coord_flip()
+```
+
+## geom_bin2d
+
+Heatmaps of 2d bin plots kunnen handig zijn om data met veel punten inzichtelijker te maken. Bij veel punten kan je een waarde voor alpha instellen of gebruik maken van 2d bin plots.
+
+```{r, eval=FALSE}
+df = data.frame(x=rnorm(100000), y=rnorm(100000))
+
+ggplot(df, aes(x=x,y=y)) + geom_point()
+
+ggplot(df, aes(x=x,y=y)) + geom_point(alpha=0.01 )
+
+ggplot(df, aes(x=x,y=y)) + geom_bin2d()
+```
+
+
+## geom_map
+
+Met geom_map kun je kaarten maken. Als je de kaart van Nederland wil maken zul je die eerst ergens vandaan moeten halen. Vanuit het `raster` package is er een handige functie `getData` om dit te doen.
+
+```{r, eval = FALSE}
+NLD <- gSimplify(getData("GADM", country= "NLD", level=1), tol=0.001, TRUE)
+NLD <- fortify(NLD)
+
+g1 <- ggplot() +
+  geom_map(
+    data = NLD, map=NLD, 
+    aes( x=long, y=lat, map_id=id, group=group),
+    fill=NA, color="black"
+    )
+g1
+```
+
+Gebruik de 'restaurant' data, in deze set staan ook de longitude en latitude coordinaten. Haal wat foute locaties weg.
+
+```{r, eval = FALSE}
+restaurants = readr::read_csv("data/Restaurants.csv")
+restaurants = restaurants %>% 
+  filter(
+    LONGs < 7,
+    LONGs > 3
+    )
+
+g2 <- g1 + geom_point(
+  data = restaurants,
+  aes(x = LONGs, y = LATs),
+  size=1.7, 
+  color = "red",
+  alpha=0.06, 
+  na.rm=TRUE
+)
+g2
+```
+
+
+
+## facets in ggplot
+
+Met `facets` kan je een matrix van plots maken. Een simpel voorbeeld is als je apart een histogram voor mannen en vrouwen wilt maken en dat naast elkaar of onder elkaar in een plot wilt zetten. Er zijn twee functies in ggplot2 die dit ondersteunen, `facet_grid` en `facet_wrap`
+
+```{r, eval=FALSE}
+## ik zie niks....
+restaurants %>%
+  ggplot(
+    aes(x=aantalreviews)
+  ) +
+  geom_histogram() + 
+facet_wrap(~keuken)
+
+top10 = restaurants %>%
+  group_by(keuken) %>%
+  summarise(n=n()) %>%
+  arrange(desc(n)) %>% 
+  filter(!is.na(keuken)) %>%
+  slice(1:10)
+
+restaurants %>%
+  inner_join(top10) %>%
+  ggplot(
+    aes(x=aantalreviews)
+  ) + 
+  geom_histogram() + facet_wrap(~keuken, ncol = 5)
+```
+
+```{r, eval = FALSE}
+restaurants %>% filter(prijs < 100) %>%
+  inner_join(top10) %>%
+  ggplot(
+    aes(x=aantalreviews, y = prijs)
+  ) + 
+  geom_point() + facet_wrap(~keuken, ncol = 5)
+```
+
+## grids
+Met grids kun je verschillende ggplots in een plaatje krijgen. We hebben een helper functie (`multiplot`) nodig:
+
+```{r, eval=FALSE}
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+Nu kunnen we meerdere ggplots in een plaatje zetten. Hoe die meerdere plots op het canvas verschijnen kan je met een layout matrix opgeven.
+
+```{r, eval=FALSE}
+plots <- list() 
+
+for (i in 1:5) {
+    p1 = qplot(1:10, rnorm(10), main = i)
+    plots[[i]] <- p1
+}
+
+layout <- matrix(c(1, 1, 2, 3, 4, 5), nrow = 2, byrow = TRUE)
+multiplot(plotlist = plots, layout = layout)
+```
+
+
+
+## Assen en titels
+
+Het is vaak nodig om assen en titels aan te passen. We geven hieronder een paar voorbeelden.
+
+```{r, eval=FALSE}
+## maak eerst een plot
+p = ggplot(mtcars, aes(x=hp, y=cyl)) + geom_point()
+p
+
+
+p + scale_x_continuous("Dit is de HP")
+p + ggtitle(" HP versus Cylinder")
+p + scale_x_continuous("Dit is de HP", breaks = 50 + 20*1:10)
+
+# log schale as
+df = data.frame(x = exp(3*rnorm(100)), y = rnorm(100))
+ggplot(df, aes(x,y)) + geom_point()
+
+ggplot(df, aes(x,y)) + geom_point()+ scale_x_log10()
+```
+
+We zagen net al dat je met ggplot tijdreeksen kon plotten op basis van date data. Gebruik `scale_x_date` om de as aan te passen.
+
+```{r, eval=FALSE}
+df = data.frame(
+  x = anytime::anydate("2017-01-01") + 1:100,
+  y = rnorm(100)
+)
+
+p = ggplot(
+  df, 
+  aes(x=x,y=y)
+  )
+
+p + geom_line() + scale_x_date(date_breaks = "1 week")
+p + geom_line() + scale_x_date(date_breaks = "1 week", date_labels = "%d-%m")
+```
+
+Je kan soms in de knel komen met as labels, die worden standaard horizontaal geprint. Als we de bar chart van restaurants terugkijken, zag je dat ik bewust het plaatje wijder had gemaakt. Als ik dat niet deed zag ik de labels moeilijker.
+
+```{r,eval=FALSE}
+p = restaurants %>%
+  group_by(keuken) %>%
+  summarise(n=n()) %>%
+  arrange(desc(n)) %>% 
+  filter(!is.na(keuken)) %>%
+  slice(1:10) %>%
+  mutate(
+    keuken = forcats::fct_reorder(keuken, n)
+  ) %>%
+  ggplot(aes(x=keuken)) + 
+  geom_bar(aes(weight=n)) 
+
+p
+
+p +  theme(axis.text.x=element_text( angle = 40, hjust=1)) 
+```
+
+
+Er is een aardige 'cheatsheet' voor ggplot2. Deze bevat beknopt een overzicht van de verschillende mogelijkheden en kan je vinden op [ggplot2 cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+<br>
+
+# Interactive grafieken
+
+---
+Naast de statistische grafieken die we hierboven hebben gemaakt kan je in R ook interactieve grafieken maken. We geven in deze sectie een aantal voorbeelden.
+
+## ggvis, vergelijkbaar met ggplot
+
+```{r, eval=FALSE}
+library(ggvis)
+
+ggvis(mtcars,~mpg)
+ggvis(mtcars,~mpg, ~wt)
+
+# ggvis werkt met %>% chain operator ipv + operator
+# handig voor gelaagde plots   (layers)
+
+mtcars %>% ggvis(~factor(cyl), ~mpg) 
+mtcars %>% ggvis(~factor(cyl), ~mpg) %>% layer_boxplots()
+
+
+mtcars %>%
+  ggvis(~mpg, ~wt) %>%
+  layer_points() %>%
+  layer_smooths()
+
+
+### met wat controls-sturing...
+
+mtcars %>%
+  ggvis(~wt, ~mpg) %>%
+  layer_smooths(span = input_slider(0.5, 1, value = 1)) %>%
+  layer_points(size := input_slider(100, 1000, value = 100))
+
+```
+
+
+## Het plotly package
+
+Plotly is een zeer mooie library voor het maken van interactieve visualisaties. Zie voor meer info [plotly](https://plot.ly/r/). We zullen een aantal voorbeelden hieronder laten zien.
+
+### scatters
+
+```{r, eval=FALSE}
+library(plotly)
+mtcars = mtcars
+mtcars$naampjes = row.names(mtcars)
+
+plot_ly(data = mtcars, x=~mpg, y = ~wt)
+plot_ly(data = mtcars, x=~mpg, y = ~wt, color = ~cyl)
+plot_ly(data = mtcars, x=~mpg, y = ~wt, text = ~naampjes)
+
+
+```
+
+
+### barcharts
+
+We gebruiken de restaurants data set weer
+
+```{r,eval=FALSE}
+Restaurants <- readr::read_csv("data/Restaurants.csv")
+keuken = Restaurants %>% dplyr::group_by(keuken) %>% dplyr::summarise(n=n())
+
+p = plot_ly(data = keuken,
+  x = ~keuken,
+  y = ~n,
+  type = "bar"
+)
+
+p
+```
+
+Sorteren op volgorde van aantallen kan je doen door reorder factor
+
+```{r, eval=FALSE}
+keuken = keuken %>%
+  mutate(
+  keuken = forcats::fct_reorder(keuken,n, .desc=TRUE)
+)
+p = plot_ly(data = keuken,
+  x = ~keuken,
+  y = ~n,
+  type = "bar"
+)
+
+p
+```
+
+### boxplots
+
+```{r, eval=FALSE}
+p = plot_ly(data = Restaurants, y = ~aantalreviews, color = ~keuken,type = "box")
+p
+```
+
+### 3D plots
+
+If you have 3D data you can plot it in a 3D scatter plot 
+
+```{r, eval=FALSE}
+p = plot_ly(data = mtcars, x=~mpg, y=~cyl, z = ~disp) 
+p
+```
+A matrix with values can be plotted as a 3D surface plot
+
+```{r, eval=FALSE}
+volcano
+plot_ly(z = ~volcano) %>% add_surface()
+```
+
+
+### ggplot integratie
+
+Je kan een grafiek maken met ggplot en dan de functie ``ggplotly` gebruiken om de grafiek interactief te maken. Als de grafiek veel punten bevat kan het sloom over komen.  Vandaar dat onderstaande voorbeeldje alleen 3000 punten sampled.
+
+```{r, eval=FALSE}
+p = ggplot(
+  data = diamonds %>% dplyr::sample_n(3000),
+  aes(x = carat, y = price)
+) +
+  geom_point(
+    alpha = 0.05, 
+    aes(text = paste("Clarity:", clarity))
+  ) +
+  geom_smooth(aes(colour = cut, fill = cut)) + 
+  facet_wrap(~ cut)
+p
+
+ggplotly(p)
+```
+
+
+## leaflet
+
+Leaflets worden gebruikt om interactieve kaartjes te maken. By deault gebruiken open street maps als achtergrond.
+
+```{r, eval=FALSE}
+library(leaflet)
+
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=174.768, lat=-36.852, popup = "The birthplace of R")
+m  
+
+# kan geblokt worden door fire walls.
+```
+
+Plot de restaurants in Zwolle op een kaartje. Data van Iens gescraped.
+
+```{r, eval=FALSE}
+Restaurants <- readr::read_csv("data/Restaurants.csv")
+Zwolle = Restaurants %>% filter(plaats == "Zwolle")
+
+## tooltip teksten kunnen geplaatst worden
+ptekst = paste(Zwolle$restNamen, '<BR> aantal reviews: ', Zwolle$aantalreviews)
+
+m2 = leaflet(data = Zwolle)
+m2 = m2 %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng = ~LONGs, lat = ~LATs, popup = ptekst)
+m2  
+```
+
+Je kan kleurtje gebruiken, gebruik dan `addCirclemarkers`
+
+```{r, eval=FALSE}
+reds = colorNumeric("Reds", domain = NULL)
+
+Zwolle = Zwolle %>% filter(!is.na(aantalreviews), aantalreviews < 80)
+ptekst = paste(Zwolle$restNamen, '<BR> aantal reviews: ', Zwolle$aantalreviews)
+
+m2 = leaflet(data = Zwolle)
+m2 = m2 %>%
+  addTiles() %>%
+  addCircleMarkers(
+    lng = ~LONGs,
+    lat = ~LATs, 
+    fillColor = ~reds(aantalreviews), 
+    fillOpacity = 1, popup = ptekst
+  )
+m2
+```
+
+
+### polygonen op een leaflet
+
+Je kan ook vormen/polygons op een leaflet kaart krijgen. Hieronder is een voorbeeld van provincies, eerst moet je de data van de polygonen hebben. Dit staat in zogenaamde shape files van de provincies, deze kan je downloaden van http://www.imergis.nl/asp/47.asp. Op deze site zie je provinciegrenzen_exact, download deze en pak deze uit. In mijn data directory is dat al gedaan. 
+
+Eerst is er een beetje voorbewerking nodig om de shape file te bewerken in R tot een zogenaamde SpatialPolygonsDataframe. Dan kan je dit met leaflet te kunnen plotten.
+
+```{r, eval = FALSE}
+#### inlezen shape file
+ProvNL <- readShapeSpatial("data/TopGrenzen-prov-actueel.shp")
+class(ProvNL)
+summary(ProvNL)
+
+#### Zet coordinatensysteem
+proj4string(ProvNL) <- CRS("+init=epsg:28992")
+
+#### transformeer naar long /lat
+ProvNL = spTransform(ProvNL, CRS("+proj=longlat +datum=WGS84"))
+
+#### Het object ProvNL is een zgn spatialpolygons object, daar zit een data frame in
+ProvNL@data
+
+#### maak een hele simpele plot
+plot(ProvNL)
+```
+
+Maar nu kun je het spatial polygons object ook op een leaflet plotten.
+
+```{r, eval = FALSE}
+leaflet(ProvNL) %>%
+  addTiles() %>%
+  addPolygons(
+    stroke = TRUE, weight = 1, fillOpacity = 0.15, smoothFactor = 0.15
+  )
+```
+
+Je kan de kleueren van de provincies ook veranderen
+
+```{r, eval=FALSE}
+ProvNL$Kleur = sample(c("red","blue"), 12, replace = TRUE)
+
+ProvNL@data
+
+leaflet(ProvNL) %>%
+  addTiles() %>%
+  addPolygons(
+    stroke = TRUE, weight = 1, fillOpacity = 0.25, smoothFactor = 0.15, fillColor = ~Kleur
+  )
+
+```
+
+** Kleuren Schemas **
+
+De kleuren kan je ook data gedreven met een kleuren schema bepalen. 
+
+```{r, eval = FALSE}
+#### maak eerst wat data voor de provincies
+ProvNL$Leeftijd = runif(12)
+
+### definieer een 3 niveau schema
+colpal <- colorQuantile(
+  palette = green2red(3), n=3,
+  domain = ProvNL$Leeftijd
+)
+
+### gebruik kleurtjes en een popup tekst
+leaflet(ProvNL) %>%
+  addTiles() %>%
+  addPolygons(
+    stroke = TRUE, 
+    weight = 1, 
+    fillOpacity = 0.25, 
+    smoothFactor = 0.15, 
+    fillColor = colpal(ProvNL$Leeftijd),
+    popup = as.character(ProvNL$Leeftijd)
+  )
+
+```
+
+
+Hieronder is een voorbeeld om op postcode 2 posities niveau een kaart te maken. We hebben eerst de data nodig die de contouren van een PC2 gebied definieert, en dan is er wat preparatie nodig om de data in polygoon objecten te krijgen. Deze gaat iets anders dan de provincies die in 1 shape file stonden.
+
+```{r, eval = FALSE}
+# importeer data uit een CSV file
+pc2_kaart <- read_csv("data/pc2_kaart.csv")
+PC2_data = dplyr::select(
+  pc2_kaart, 
+  Longitude,
+  Latitude, 
+  PC2CODE ) %>%
+  as.data.frame()
+
+# Het moet een lijst van gebieden zijn.
+Pc2_list = split(PC2_data, PC2_data$PC2CODE)
+Pc2_list = lapply(Pc2_list, function(x) { x["PC2CODE"] <- NULL; x })
+
+
+### Maak van elk lijst object een Polygon
+plg = sapply(Pc2_list, Polygon)
+
+plg[[1]]
+```
+
+Nu gaan we per PC2 gebied het aantal restaurants tellen en dit in een kaartje zetten.
+
+```{r, eval = FALSE}
+PC2 = Restaurants %>%
+  mutate(
+    PC2 = stringr::str_sub(PCs,1,2)
+  ) %>%
+  group_by(PC2) %>%
+  summarise(n=n()) %>% 
+  filter(PC2 >= "10")
+
+## initieer de leaflet en voeg PC2 polygon 1 voor 1 toe
+
+pc2_lf = leaflet() %>%  addTiles() 
+
+## definieer een kleuren schema
+colpal <- colorQuantile(
+  palette = green2red(7), n=7,
+  domain = PC2$n
+)
+
+## elk polygoontje krijgt nu op basis van zijn restaurant aantal het 'juiste' kleurtje
+
+### teken per polygon, dat is het makkelijkst
+for (i in 1:length(plg)){
+  ptxt = paste(
+    "PC2: ", as.character(PC2$PC2[i]),
+    "<br>",
+    "Aantal Restaurants",
+    as.character(PC2$n[i])
+  )
+  pc2_lf = pc2_lf %>%
+    addPolygons(
+      data = plg[[i]],
+      weight = 2,
+      smoothFactor = 1,
+      fillOpacity = 0.55,
+      fillColor= colpal(PC2$n[i]),
+      popup = ptxt
+    )
+}
+
+pc2_lf
+```
+
+
+
+## Netwerk grafieken, visnetwork
+
+Het package `visnetwork` kan worden gebruikt om interactieve netwerk grafieken te maken. Je hebt twee data frames nodig, een met de nodes en een met de edges. Laten we beginnen met een simpel voorbeeldje.
+
+```{r, eval=FALSE}
+library(visNetwork)
+
+nodes = data.frame(
+  id = c(1,2,3,4)
+)
+edges = data.frame(
+  from = c(1,3,4), 
+  to  = c(2,2,2)
+)
+
+visNetwork(nodes, edges)
+```
+
+
+Er zijn diverse opties die je kan meegeven. Een deel van de opties kan je via de data frames meegeven.
+
+```{r, eval=FALSE}
+nodes <- data.frame(
+  id = 1:10,
+  label = paste("Node", 1:10),                                   # labels
+  group = c("GrA", "GrB"),                                       # groups
+  value = 1:10,                                                  # size
+  shape = c("square", "triangle", "box", "circle", "dot", "star", "ellipse", "database", "text", "diamond"),    # shape
+  title = paste0("<p><b>", 1:10,"</b><br>Node !</p>"),           # tooltip
+  color = c("darkred", "grey", "orange", "darkblue", "purple"),  # color
+  shadow = c(FALSE, TRUE, FALSE, TRUE, TRUE))                    # shadow
+
+edges <- data.frame(from = sample(1:10,8), to = sample(1:10, 8),
+  label = paste("Edge", 1:8),                                 # labels
+  length = c(100,500),                                        # length
+  arrows = c("to", "from", "middle", "middle;to"),            # arrows
+  dashes = c(TRUE, FALSE),                                    # dashes
+  title = paste("Edge", 1:8),                                 # tooltip
+  smooth = c(FALSE, TRUE),                                    # smooth
+  shadow = c(FALSE, TRUE, FALSE, TRUE))                       # shadow
+
+visNetwork(nodes, edges)
+```
+
+
+Andere opties kan je via de functie `visnetwork` meegeven. Bijvoorbeeld highlight nearest
+
+```{r, eval=FALSE}
+nodes <- data.frame(
+  id = 1:15,
+  label = paste("Label", 1:15),
+  group = sample(LETTERS[1:3], 15, replace = TRUE)
+)
+
+edges <- data.frame(
+  from = trunc(runif(15)*(15-1))+1,
+  to = trunc(runif(15)*(15-1))+1
+)
+
+visNetwork(nodes, edges) %>% 
+  visOptions(
+    highlightNearest = TRUE,
+    nodesIdSelection = TRUE
+  )
+```
+
+Nog een netwerk voorbeeldje van restaurant bezoekers in het mooie stadje Hoorn. Bij het scrapen van Iens, kan je ook zien dat een reviewer eerst een bepaald restaurant heeft gereviewed en dan een ander, dat is in een netwerk graph te zetten. 
+
+Focus nu alleen op het mooie stadje Hoorn.
+
+```{r, eval=FALSE}
+Hoornnodes = readRDS("data/HoornNodes.RDs")
+HoornEdges = readRDS("data/HoornEdges.RDs")
+
+visNetwork(Hoornnodes, HoornEdges) %>% 
+  visLegend() %>%
+  visOptions(
+    highlightNearest = TRUE, 
+    nodesIdSelection = TRUE
+  ) %>%
+  visInteraction(
+    navigationButtons = TRUE
+  ) %>%
+  visPhysics( maxVelocity = 25)
+
+```
+
+
+# Zoomable circle packing plots en sunburst plots
+
+Circle packings zijn een leuke manier om hierarchische data te visualiseren. Installeer eerst het package van Github.
+
+```{r, eval = FALSE}
+devtools::install_github("jeromefroe/circlepackeR")
+```
+
+Maak wat dummy data aan. Volgend voorbeeldje is een huerarchiesch lijst.
+
+```{r, eval= FALSE}
+hierarchical_list <- list(name = "World",
+                          children = list(
+                            list(name = "North America",
+                                 children = list(
+                                   list(name = "United States", size = 308865000),
+                                   list(name = "Mexico", size = 107550697),
+                                   list(name = "Canada", size = 34033000))),
+                            list(name = "South America", 
+                                 children = list(
+                                   list(name = "Brazil", size = 192612000),
+                                   list(name = "Colombia", size = 45349000),
+                                   list(name = "Argentina", size = 40134425))),
+                            list(name = "Europe",  
+                                 children = list(
+                                   list(name = "Germany", size = 81757600),
+                                   list(name = "France", size = 65447374),
+                                   list(name = "United Kingdom", size = 62041708))),
+                            list(name = "Africa",  
+                                 children = list(
+                                   list(name = "Nigeria", size = 154729000),
+                                   list(name = "Ethiopia", size = 79221000),
+                                   list(name = "Egypt", size = 77979000))),
+                            list(name = "Asia",  
+                                 children = list(
+                                   list(name = "China", size = 1336335000),
+                                   list(name = "India", size = 1178225000),
+                                   list(name = "Indonesia", size = 231369500)))
+                          )
+)
+```
+
+and plot it 
+
+```{r, eval=FALSE}
+circlepackeR::circlepackeR(hierarchical_list)
+```
+
+Interactieve sunburst plots kan je ook mooi gebruiken voor hierarchische data.
+
+```{r, eval=FALSE}
+library(sunburstR)
+
+seqData = read.csv(
+  file = paste0(
+    "https://gist.githubusercontent.com/mkajava/",
+    "7515402/raw/9f80d28094dc9dfed7090f8fb3376ef1539f4fd2/",
+    "comment-sequences.csv"
+  )
+  ,header = TRUE
+  ,stringsAsFactors = FALSE
+)
+  
+sunburst(
+  seqData
+)
+
+sunburst(
+  seqData
+  ,count = TRUE
+)
+
+## aangepaste text in het midden 
+sunburst(
+  seqData
+  # apply sort order to the legends
+  ,legendOrder = unique(unlist(strsplit(seqData[,1],":")))
+  # just provide the name in the explanation in the center
+  ,explanation = "function(d){return d.data.name}"
+)
+```
+
+Chord diagrams zijn een leuke manier om "A naar B" data weer te geven, relaties tussen entiteiten.
+
+```{r, eval=FALSE}
+#devtools::install_github("mattflor/chorddiag")
+library(chorddiag)
+
+# overgangsmatrix
+m <- matrix(
+  c(11975,  5871, 8916, 2868,
+    1951, 10048, 2060, 6171,
+    8010, 16145, 8090, 8045,
+    1013,   990,  940, 6907
+  ),
+  byrow = TRUE,
+  nrow = 4, ncol = 4
+)
+
+haircolors <- c("black", "blonde", "brown", "red")
+dimnames(m) <- list(have = haircolors, prefer = haircolors)
+m
+
+groupColors <- c("#000000", "#FFDD89", "#957244", "#F26223")
+chorddiag(m, groupColors = groupColors, groupnamePadding = 20)
+```
