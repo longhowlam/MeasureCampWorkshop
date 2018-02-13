@@ -1,7 +1,7 @@
 ---
-title: 'Avond Sessie 02: Data preparatie'
+title: 'MeasureCamp R Workshop 02'
 author: "Longhow Lam"
-subtitle: Inleiding R
+subtitle:  'Data preparatie'
 output:
   pdf_document:
     toc: yes

@@ -1,6 +1,6 @@
 ---
-title: "Avond Sessie 03: Data visualisatie"
-subtitle: "Inleiding R"
+title: "MeasureCamp R Workshop 03"
+subtitle: "Data visualisatie"
 author: "Longhow Lam"
 output:
   prettydoc::html_pretty:

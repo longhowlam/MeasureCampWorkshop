@@ -1,6 +1,6 @@
 ---
-title: 'Avond Sessie 01: Data types/structures'
-subtitle: "Inleiding R"
+title: 'MeasureCamp R Workshop 01'
+subtitle: "Data types/structures"
 author: "Longhow Lam"
 output:
    prettydoc::html_pretty:

@@ -1,7 +1,7 @@
 ---
-title: 'Avond Sessie 04: Machine learning'
+title: 'MeasureCamp R Workshop 04'
 author: "Longhow Lam"
-subtitle: Inleiding R
+subtitle: "Machine Learning"
 output:
   prettydoc::html_pretty:
     highlight: github
