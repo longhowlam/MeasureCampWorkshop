@@ -1,0 +1,88 @@
+---
+title: 'MeasureCamp R Workshop'
+subtitle: 'The Basics of R'
+author: "Longhow Lam"
+output:
+   prettydoc::html_pretty:
+     highlight: github
+     theme: cayman
+     toc: true
+     toc_depth: 2
+     number_sections: true
+     css: mycayman.min.css
+   pdf_document:
+     toc: yes
+     toc_depth: '2'
+   html_notebook:
+     theme: sandstone
+     toc: true
+     toc_depth: 2
+     toc_float: true
+     number_sections: true
+---
+
+
+![](measurecamp.PNG)
+
+<br>
+
+
+# De RStudio Environment
+
+---
+
+
+# Data types and structures
+
+---
+
+# Importing data
+
+---
+
+# Manipulating data
+
+---
+
+
+# Data visualisation
+
+---
+
+## ggplot
+
+## plotly
+
+## leaflet
+
+
+## visnetwork
+
+
+
+# Machine learning
+
+---
+
+## regression
+
+
+## classification
+
+```{r}
+library(rpart)
+# Complex tree
+data("solder")
+res <- rpart(Opening~., data = solder, control = rpart.control(cp = 0.00005))
+visTree(res, height = "800px", nodesPopSize = TRUE, minNodeSize = 10, maxNodeSize = 30)
+```
+
+
+## market basket
+
+## interactive MBA graphs
+
+
+$$
+\sum
+$$
