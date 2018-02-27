@@ -27,22 +27,538 @@ output:
 <br>
 
 
-# De RStudio Environment
+# The RStudio Environment
 
 ---
 
 
-# Data types and structures
+Start with powerpoint slides over R followed by an intro in RStudio:
+
+* Console,
+* Script windows,
+* Environment tab (Object browser),
+* Packages.
+
+![](RStudio.png)
+
+## De R Console
+
+De R Console is een plek waar je snel even een kort stukje code wilt runnen. Type daar een R expressie in en Enter om te runnen. Output van scripts verschijnt ook in de R Console.
+
+
+## Scripts 
+
+Scripts, zijn gewone tekst files (*.R) met R code. In RStudio kan je meerdere scripts openen en bewerken. Scripts die bij elkaar horen kan je in een R Project zetten. Via het File menu > New File > R Script kan je in RStudio een nieuw R script file maken. Of gebruik de short cut: Ctrl+Shift+N.
+
+In een script type je R code en als je met de cursor op een regel staat kan je die regel code runnen door Ctrl+Enter in te drukken. Je kan ook meerdere regels selecteren en deze regels runnen door Crtl+Enter. Zie voor meer opties het Code menu en 'Run Region'.
+
+
+## R Notebooks
+
+R notebooks bevatten meer dan alleen R code, het is een 'compleet' document met R code, output en een beschrijvende verhaallijn. In een R project kun je ook meerdere van deze notebooks en scripts beheren. Notebooks maak je met Rmarkdown, een soort light weight markup language waarin je bijvoorbeeld headers, figuren en vet gedrukt kan specificeren. Deze R cursus werkt met R notebooks. Een notebook bevat **R code chunks** die je kan runnen.
+
+Als je op de 'Preview' knop drukt boven het R notebook krijg je een apart window te zien met het **resultaat van het R notebook**. Er wordt dan ook door RStudio een aparte file gemaakt die de naam <file_naam>.nb.html heeft. Dit is een html file die je kan delen met anderen.
+ 
+Naast de nb.html, kan je een R notebook ook "knit" ('breien') tot een html, pdf of Word document. De header van het markdown document vertelt hoe het een en ander gebreid moet worden. Zie bijvoorbeeld dit document. Naast de 'Preview' knop zie je een pijltje waaruit je kan kiezen.
+
+## R Projecten
+
+Organiseer je R werk in projecten. Een project kan bestaan uit verschillende scripts, notebooks, data en output, deze wil je handig in 1 folder hebben. In RStudio kan je heel handig met verschillende R projecten werken. Via de GUI kun je nieuwe projecten aanmaken en beheren: File > New Project...
+
+
+## Git version controle
+
+Git is een version control systeem. In RStudio kan je makkelijk git gebruiken. Je zult het wel eerst moeten installeren. Op windows kan je git installeren via [de git site](https://git-scm.com/download/win). We gaan hier in deze cursus verder niet op in.
+
+
+## Een paar simpele expressie
+
+Hieronder een paar simpele expressies in R om te beginnen
+
+```{r, eval=FALSE}
+1 + 1
+print("hello world")
+
+## assignment kan je = of <- gebruiken,
+## pijltje stamt nog uit een tijd waar het een toets op het toetsenbord was
+
+## Als je onderstaande regel runt wordt het object test gemaakt, je ziet nog verder niks
+test = 9
+
+## Om te zien wat er in het object test zit moet je het printen
+## Dit doe je door het volgende code te runnen, nu zie je iets verschijnen
+print(test)
+
+## Omdat je best vaak snel wilt zien wat er in een object zit volstaat alleen de naam ook
+## dus run de volgende regel
+test
+
+## als een object al bestaat wordt die zonder waarschuwingen overschreven
+test <- 3
+test
+```
+
+
+# Data types 
 
 ---
+
+Alle data in R is van een bepaalde type, we zullen de verschillende data types hieronder behandelen. met de functie `typeof` kan je het type altijd opvragen van een object in R.
+
+## Numerieke data
+
+### double
+
+De `double` datatype in R wordt vaak gebruikt om numerieke waarden ('alledaagse' getallen te representeren). Denk bijvoorbeeld aan kenmerken van mensen zoals lengte ( 1.85) of gewicht (78.8).  
+
+```{r, eval=FALSE}
+x4 = 4
+x5 = 5.6 / 8
+
+x6 = pi/2
+
+is.double(x4)
+
+```
+
+
+### integer
+
+Het `integer` data type in R representeren ook numerieke waarden. Alleen in tegenstelling tot doubles representeren ze alleen gehele getallen. Bijvoorbeeld een tel variabelen, aantal kinderen (0, 1, 2,...).
+
+```{r, eval=FALSE}
+# let op, onderstaande zijn nog doubles in R.
+x = 1
+y = 2
+
+is.integer(x)
+
+x = as.integer(1)
+z = x + 9.78
+
+is.integer(z)
+
+y = 34L
+is.integer(y)
+
+x7 = 4L
+is.double(x7)
+
+# in tegenstelling tot sommige andere talen kan je in R double en integers 
+# in berekeningen zonder vertalingen gebruiken
+
+x8 = x4 + x7
+typeof(x8)
+```
+
+## character
+
+In R kan je met het `character` data type teksten (of ook soms strings genoemd) opslaan. Bewerkingen en manipulaties van characters in sessie 2.
+
+```{r, eval=FALSE}
+x1 = "Longhow Lam"
+x2 = "1628 AA Hoorn"
+
+is.character(x1)
+
+nchar(x2)
+
+x3 = paste(x1, x2)
+x3 = paste(x1, x2, sep="")
+```
+
+
+## factor
+
+In R zijn `factors` bedoeld om categorische variabelen te representeren. Denk aan geslacht, of opleiding. Verwar een factor niet met het type character, je kan factor variabelen wel van character variabelen maken. In sommige predictive modeling functies heb je expliciet factor variabelen nodig en niet character.
+
+
+In data sets zijn vaak namen of achternamen van personen van het type character, maar bijvoorbeeld geslacht of opleiding van het type factor.
+
+```{r, eval=FALSE}
+x3 = c("M", "F", "M")
+
+is.character(x3)
+typeof(x3)
+
+y3 = as.factor(x3)
+x3
+y3
+```
+
+Dit is wel apart
+
+```{r, eval=FALSE}
+typeof(y3)
+is.character(y3)
+is.factor(y3)
+is.integer(y3)
+
+levels(y3)
+levels(x3)
+
+# Dus let op het verschil tussen factors en characters!!!!
+```
+
+
+## logical
+
+Als je in R een test uitvoert, dan is het resultaat van het type `logical`. We zagen al de functies `is.double` en `is.integer`.
+
+```{r, eval=FALSE}
+x7 = TRUE
+x8 = FALSE
+
+typeof(x7)
+
+x9 = x6 < 8
+
+is.logical(x9)
+
+x1 = as.integer(1)
+x2 = 1
+
+x1
+x2
+```
+
+Merk op dat in R, een double gelijk kan zijn aan een integer, in andere talen kan dit anders zijn.
+
+```{r, eval = FALSE}
+is.integer(x2)
+is.integer(x1)
+
+x1 == x2
+```
+
+Het volgende blokje code laat logische operatoren zien.
+
+```{r, eval=FALSE}
+# ampersand is testen op "DIT"" EN "DAT""
+TRUE & FALSE    # AND
+
+x = 9
+x < 10 & x > 5
+
+# negatie, tegenovergestelde
+!TRUE           # NOT
+!FALSE
+
+# vertical pipe is testen op "dit"" OF "dat""
+TRUE | FALSE    # OR
+x < 7 | x > 8
+```
+
+Je kan rekenen met logicals
+
+```{r, eval = FALSE}
+TRUE + TRUE
+FALSE + FALSE + TRUE
+
+### What the F...
+
+0.1 + 0.2 == 0.3
+
+1 + 2 == 3
+x = 0.3
+
+sprintf("%.16f", x)
+sprintf("%.24f", x)
+```
+
+
+## missing value
+
+Missende waarden kunnen in R worden gerepresenteerd met `NA`. Je kan missende doubles, integers etc. hebben.
+
+```{r, eval=FALSE}
+x3 = NA
+
+# gebruik is.na om te checken of iets NA is
+is.na(x3)
+
+# een rijtje getallen waarbij eentje missend is
+x4 = c(1, 2, 3, 4, NA, 5, 7)
+
+# hoeveel elementen zijn NA en niet NA
+sum(is.na(x4))
+sum(!is.na(x4))
+
+x4 < 4
+
+is.na(x4)
+```
+
+
+
+# Data structures
+
+---
+
+
+Data in R kan in verschillende vormen verschijnen, de zogenaamde data structuren. We zullen hieronder een aantal basis structuren behandelen.
+
+## vectors
+
+Vectoren worden gebruikt om een 'rijtje' elementen op te slaan. Je kan een vector van doubles hebben, characters etc... Alle elementen kunnen alleen van hetzelfde type zijn!
+
+```{r, eval=FALSE}
+## een getal is ook al een vectpr, van lengte 1
+x0 = 1
+
+x1 = c( 1, 2, 3, 4, 5)
+length(x1)
+class(x1)
+
+x2 = c(2L, 3)
+typeof(x2)
+
+x3 = c("p", 2)
+```
+
+Er zijn diverse functies in R die je kan gebruiken om vectoren te genereren zonder alle elementen een voor een in te typen :-)
+
+```{r, eval = FALSE}
+x1 = 1:1000
+x1 = 187:278
+
+x2 = seq(1, 50, length=100)
+x2a = seq(1,500, by = 20)
+
+## samenvoegen van twee of meer vectoren
+x3 = c( x0, rnorm(100))
+
+class(x4)
+```
+
+
+Het genreren van wat random getallen is handig om snel wat data te hebben om te testen, in R zijn er diverse functies.
+
+```{r, eval=FALSE}
+# normaal verdeelde getallen
+rnorm(100)
+rnorm(100, 9, 2)
+
+#uniform verdeelde getallen
+runif(100)
+runif(100,8,10)
+
+# trekken uit een vector
+x4 = sample( letters, rep = TRUE, size = 100)
+```
+
+
+Berekeningen op vectoren gebeuren elements-gewijs
+
+```{r, eval=FALSE}
+y = 3 * x3 + 8
+
+## en wat is dit???
+y = x4 + 8
+
+x4 = rep(1:6, 7)
+x4 = rep(x4,8)
+
+x5 = rep(1:10, each = 3)
+```
+
+De functie `cut` om factor vectoren te maken uit double vectoren
+
+```{r}
+x <- rnorm(100)
+y <- cut(x, 4)
+```
+
+
+
+### subscripting of vectors
+
+Hoe benader je elementen in een vector? Dat kan met subscripts
+
+```{r, eval=FALSE}
+## R begint te tellen bij 1
+x3 = 100:200
+
+## subscripts zijn : 1 getal, een vector van getallen, negatieve getallen
+x3[1]
+x3[  4:10  ]
+x3[  -(1:10)]
+
+## gebroken kan ook...
+x3[8.9]
+
+## je kan met subscripts ook elementen veranderen
+x3[  8:17  ] = 0
+```
+
+Je kan ook een vector van TRUE/FALSE opgeven als subscript.
+
+```{r, eval=FALSE}
+x = rnorm(100)
+x[x > 2]
+
+```
+
+Een paar simpele functies die je op vectoren kan toepassen
+
+```{r, eval=FALSE}
+y = rnorm(1000)
+
+mean(y)
+var(y ) 
+min(y)
+sd(y)
+max(y)
+summary(y)
+
+sum(y < 0)
+```
+
+
+##  Matrices
+
+Een matrix is een verzameling van vectoren die even lang zijn. Je kan rechthoekige (aantal rijen anders dan aantal kolommen) of vierkande matrices (aantal rijen = aantal kolommen) hebben.
+
+```{r, eval=FALSE}
+## maak een matrix van een vector
+m1 = rnorm(100)
+m2 = matrix(m1, byrow = FALSE, ncol=10)
+m2
+dim(m2)
+class(m2)
+
+## maak een matrix van een aantal vectoren
+x = 1:10
+y = 10:1
+z = 11:20
+
+m3 = cbind(x,y,z)
+m4 = rbind(x,y,z)
+```
+
+Net als vectoren kan je elementen in een matrix benaderen met subscripts, hieronder volgen een aantal voorbeelden.
+
+```{r, eval = FALSE} 
+m2[1,5]
+
+m2[  4:10,    3:5]
+
+m2[5,]
+
+m2[ ,5]
+```
+
+Met matrices kun je rekenen. Een paar typische matrix bewerkingen.
+
+```{r, eval =FALSE}
+# determinant van een matrix
+det(m2)
+
+# matrix transponeren
+t(m2)
+
+# inverse van een matrix
+solve(m2)
+
+# er zijn twee soorten vermenigvuldigingen van matrices
+m2 %*% solve(m2)
+m2 * solve(m2)
+
+round(m2 %*% solve(m2))
+```
+
+## data frames
+
+Een data frame kan je zien als een matrix, maar in tegenstelling tot een matrix, kunnen kolommen van een data frame van een andere type zijn. Voor data analyse met 'echte' data zal een data.frame de meest handige structuur zijn. je hebt bijvoorbeeld een factor kolom 'Geslacht', een double kolom met bijvoorbeeld 'geweicht' en je kan een character kolom hebben met 'achternaam'.
+
+
+```{r, eval=FALSE}
+x1 = 1:100
+x2 = rnorm(100)
+x3 = rnorm(100)
+x4 = sample(c("M","F"), size = 100, replace = TRUE)
+
+df1 = data.frame(
+  kolomnaampj1 = x1,
+  income = x2,
+  age = x3,
+  type = x4
+)
+
+# laat eerste 10 rijen zien
+head(df1,10)
+```
+
+De volgende functies kan je gebruiken om wat extra info van een data frame te laten zien.
+
+```{r, eval=FALSE}
+# laat de namen van de kolommen zien
+names(df1)
+
+# names kan je ook gebruiken om bestaande kolomnamen te wijzigen
+df2 = df1
+names(df2) = c("A", "B", "C", "D")
+
+# dimensie en classe
+dim(df1)
+class(df1)
+
+# De levels van kolom 'type' uit mydf
+levels(mydf$type)
+
+### pas op met characters die worden standaard in data.frame naar factors omgezet
+x4
+class(x4)
+class(df1$type)
+
+mydf = data.frame(kolomnaampj1 = x1, income = x2, age=x3, type = x4, stringsAsFactors = FALSE)
+mydf
+class(mydf$type)
+
+## Dit is ook in de Environment viewer te zien
+```
+
+Je kan net als bij matrices subscripts gebruiken in data frame om bepaalde data uit een data.frame te halen
+
+```{r, eval=FALSE}
+df1[1,3]
+df1[11:20,]
+
+df1[, 2:3]
+df1$income
+
+## kolom toevoegen
+df1$NEW = df1$income / 100
+df1
+```
+
+
 
 # Importing data
 
 ---
 
-# Manipulating data
+## using the gui
+
+## using functions from `readr`
+
+## data base connection
+
+
 
 ---
+
+# Data preparation and Manipulation
+
+---
+
+## tidyverse
+
+
+## dplyr
+
+## strings
+
 
 
 # Data visualisation
@@ -67,9 +583,166 @@ output:
 ## regression
 
 
-## classification
+
+# predictive modeling technieken
+
+---
+
+In R kan je veel verschillende predictive modellen fitten. We behandelen alleen een paar in deze sessie. 
+Lineaire regressie met de functie `lm`, logistische regressie met de functie `glm`, decision trees met de functie `rpart` en ensemble van trees met `ranger` en  `xgboost`. Ik zal deze functies apart behandelen maar we zullen later in de sessie zien met het package `mlr` hoe je op een meer uniforme manier meerdere modellen kan proberen op een data set.
+
+
+## lineare regressie 
+
+We beginnen met simpele lineaire regressie, bruikbaar voor voorspel modellen waar de Target variable continu (numeric) is. We nemen als voorbeeld huizen prijs data die ik gescraped heb van jaap.nl. We willen de prijs van een huis voorspellen basis van een aantal input variabelen/kenmerken.
+
+```{r, eval = FALSE}
+jaap = readRDS("Jaap.RDs")
+
+modelout  = lm( prijs ~ kamers               , data = jaap)
+modelout2 = lm( prijs ~ kamers + Oppervlakte , data = jaap) 
+
+modelout
+modelout2
+```
+
+Modeling functies in R retourneren objecten met van alles er nog wat in. De functie `lm` levert een object af van de klasse lm.
+
+```{r, eval = FALSE}
+class(modelout)
+names(modelout)
+modelout$coefficients
+
+summary(modelout)
+plot(modelout)
+```
+
+Je ziet dat er wat outliers in de data zitten, die kunnen we nog eens er uit filteren
 
 ```{r}
+library(dplyr)
+jaap = jaap %>% filter( prijs < 2000000 )
+modelout  = lm( prijs ~ kamers              , data = jaap)
+modelout2 = lm( prijs ~ kamers + Oppervlakte , data = jaap) 
+```
+
+Iets mooiere diagnostische plots uit `lm` objecten krijg je met de library `ggfortify` die weet hoe je lm objecten moet interpreteren voor ggplot. Dan kan je met de functie `autoplot` uit ggplot mooiere diagnostische plots maken.
+
+```{r, eval = FALSE}
+library(ggfortify)
+library(ggplot2)
+
+ggplot2::autoplot(modelout)
+```
+
+### formula objects
+
+Modellen in R kan je specificeren met zogenaamde de formula objects. Hieronder zie je een aantal voorbeelden.
+
+```{r, eval = FALSE}
+names(jaap)
+jaap = jaap %>% mutate(PC1Positie = stringr::str_sub(PC,1,1))
+
+jaap = jaap %>% filter(
+  !is.na(Oppervlakte),
+  !is.na(kamers),
+  !is.na(PC1Positie)
+  )
+
+f0 = prijs ~ Oppervlakte + kamers 
+m0 = lm(f0, data = jaap)
+m0
+summary(m0)
+
+f1 = prijs ~ Oppervlakte + kamers + PC1Positie
+m1 = lm(f1, data = jaap)
+m1
+summary(m1)
+
+
+## interactie termen
+f2 = prijs ~ Oppervlakte*kamers*PC1Positie
+m2 = lm(f2, data = jaap)
+summary(m2)
+
+
+##  termen weglaten
+f3 = prijs ~ Oppervlakte*kamers*PC1Positie - Oppervlakte:kamers:PC1Positie
+m3 = lm(f3, data = jaap)
+summary(m3)
+
+## een target en de rest van de variabelen als inputs
+f4 = prijs ~ . -PC6 -PC
+m4 = lm(f4, data = jaap)
+summary(m4)
+```
+
+
+Als je verschillende model objecten hebt gemaakt kan je de functie `anova` gebruiken om ze met elkaar te vergelijken. Dit gebeurt met behulp van F statistics. De modellen moeten wel oplopend in complexiteit zijn.
+
+
+```{r, eval =FALSE}
+anova(m0, m1, m3, m2)
+```
+
+### Buckets / linear constant  en splines 
+
+Als een input variable niet linear is mbt de target kan je deze niet lineariteit modelleren met buckets (linear constante stukken) of met splines.
+
+```{r, eval = FALSE}
+library(ggplot2)
+library(dplyr)
+library(splines)
+
+jaap %>% filter(prijs < 1000000, Oppervlakte < 1500) %>%ggplot(aes(x=Oppervlakte, y= prijs)) + geom_point()
+
+mybreaks = seq(0,1000, by = 25)
+jaap = jaap %>% mutate(OppervlakteBucket = cut(Oppervlakte, breaks = mybreaks))
+
+
+m1 = lm(prijs ~ Oppervlakte, data = jaap)
+m2 = lm(prijs ~ OppervlakteBucket, data = jaap)
+m3 = lm(prijs ~ ns(Oppervlakte,6), data = jaap)
+
+summary(m1)
+summary(m2)
+summary(m3)
+
+```
+
+###  predicties
+
+Met de functie `predict` kunnen we nieuwe huizen scoren, dat wil zeggen de prijs van andere huizen die niet in de training data set zaten voorspellen.
+
+
+```{r, eval=FALSE}
+NieuweHuizen = data.frame(
+  Oppervlakte = seq(20, 250, l = 100)
+  ) %>%
+  mutate(
+   OppervlakteBucket = cut(Oppervlakte, breaks = mybreaks)
+  )
+
+# Bucket predicties
+prijs2 = predict(m2, newdata = NieuweHuizen)
+NieuweHuizen$prijs2 = prijs2
+
+ggplot(NieuweHuizen, aes(x=Oppervlakte, y = prijs2)) + geom_line()
+
+# Spline predicties
+prijs3 = predict(m3, newdata = NieuweHuizen)
+NieuweHuizen$prijs3 = prijs3
+
+
+ggplot(NieuweHuizen, aes(x=Oppervlakte, y = prijs2)) + geom_point() + geom_point(aes(y=prijs3), col=2)
+
+```
+
+
+## classification
+
+descion tree plotten
+```{r, eval = FALSE}
 library(rpart)
 # Complex tree
 data("solder")
@@ -82,7 +755,3 @@ visTree(res, height = "800px", nodesPopSize = TRUE, minNodeSize = 10, maxNodeSiz
 
 ## interactive MBA graphs
 
-
-$$
-\sum
-$$
