@@ -758,6 +758,7 @@ Met market basket analyse (ook wel association rules mining genoemd) kan je uit 
 Vanuit transactionele data moet je in R de data converteren naar een zogenaamde `transaction object`. Dit kan je doen met het `arules` package.
 
 ```{r, eval = FALSE}
+library(arules)
 ## De meest simpele transactionele data set
 trxDF = readRDS("boodschappen.RDs")
 
@@ -814,8 +815,45 @@ Een ander manier om regels weer te geven is in een network graph, de verzameling
 
 ```{r, eval=FALSE}
 library(arulesViz)
-plot(head(sort(rules2, by = "lift"), n=50), method = "graph", control=list(cex=.8))
+plot(head(sort(rules, by = "lift"), n=50), method = "graph", control=list(cex=.8))
 ```
 
 ### interactive MBA graphs
+
+You can visualise rules in interactive plotly or visNetwork plots.
+
+```{r}
+rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8) )
+rulesDF = rules %>% DATAFRAME()
+
+library(plotly)
+plotly_arules(rules, max = 2000)
+plotly_arules(rules, method = "two-key plot")
+```
+
+```{r}
+library(visNetwork)
+rules <- apriori(Groceries, parameter = list(supp = 0.0001, conf = 0.1, minlen =2, maxlen=2) )
+rulesDF = head(
+  sort(rules, by = "lift"),
+  n=250
+  ) %>% 
+  DATAFRAME() %>%
+  mutate(
+    from = as.character(LHS),
+    to = as.character(RHS),
+    value = lift
+  )
+
+nodes = data.frame(
+  id = base::unique(c(rulesDF$from, rulesDF$to)),
+  stringsAsFactors = FALSE
+) %>% mutate(
+  title = id
+)
+
+visNetwork(nodes, rulesDF) %>%
+   visOptions(highlightNearest = TRUE,  nodesIdSelection = TRUE) %>%
+   visEdges(smooth = TRUE) 
+```
 
