@@ -580,19 +580,18 @@ df1
 
 ---
 
-## regression
+In R you can create different machine learning models, in this script I wlll demo supervised machine learning:
+
+* regression, with lm
+* classification, with glm, rpart and h2o
+
+In supervised learning you are predicting an observed 'Target', observed 'behaviour' from data. When this target is binary we have a classifiaction problem. For example we observed whether or not customers responded to a mailing, whether or not a customer had a car accident. When this target is numeric we have a regression problem. 
 
 
-
-# predictive modeling technieken
-
----
-
-In R kan je veel verschillende predictive modellen fitten. We behandelen alleen een paar in deze sessie. 
-Lineaire regressie met de functie `lm`, logistische regressie met de functie `glm`, decision trees met de functie `rpart` en ensemble van trees met `ranger` en  `xgboost`. Ik zal deze functies apart behandelen maar we zullen later in de sessie zien met het package `mlr` hoe je op een meer uniforme manier meerdere modellen kan proberen op een data set.
+I'll also show market basket analaysis with the package `arules`. A technique to o analyse transactional data. For example physical purchases in suprmarket or web clicks on a site.
 
 
-## lineare regressie 
+## Lineare regressie 
 
 We beginnen met simpele lineaire regressie, bruikbaar voor voorspel modellen waar de Target variable continu (numeric) is. We nemen als voorbeeld huizen prijs data die ik gescraped heb van jaap.nl. We willen de prijs van een huis voorspellen basis van een aantal input variabelen/kenmerken.
 
@@ -619,7 +618,7 @@ plot(modelout)
 
 Je ziet dat er wat outliers in de data zitten, die kunnen we nog eens er uit filteren
 
-```{r}
+```{r, eval=FALSE}
 library(dplyr)
 jaap = jaap %>% filter( prijs < 2000000 )
 modelout  = lm( prijs ~ kamers              , data = jaap)
@@ -739,7 +738,10 @@ ggplot(NieuweHuizen, aes(x=Oppervlakte, y = prijs2)) + geom_point() + geom_point
 ```
 
 
-## classification
+## Classification
+
+We use insurance data from the library `insuranceData` to demonstrate classification models.
+
 
 descion tree plotten
 ```{r, eval = FALSE}
@@ -822,7 +824,7 @@ plot(head(sort(rules, by = "lift"), n=50), method = "graph", control=list(cex=.8
 
 You can visualise rules in interactive plotly plots or interactive visNetwork plots. First, an interactive scatter plot of the rules can be made. Each rule is plotted as a point, where the x axis represents the support and the y axis represent the confidence of the rule.
 
-```{r}
+```{r, eval=FALSE}
 rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8) )
 rulesDF = rules %>% DATAFRAME()
 
@@ -833,7 +835,7 @@ plotly_arules(rules, method = "two-key plot")
 
 Secondly, an interactive visNetwork can be created. We need to extract the nodes and edges from the rules object.
 
-```{r}
+```{r, eval=FALSE}
 library(visNetwork)
 
 rules <- apriori(
