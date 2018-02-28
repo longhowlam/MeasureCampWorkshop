@@ -820,7 +820,7 @@ plot(head(sort(rules, by = "lift"), n=50), method = "graph", control=list(cex=.8
 
 ### interactive MBA graphs
 
-You can visualise rules in interactive plotly or visNetwork plots.
+You can visualise rules in interactive plotly plots or interactive visNetwork plots. First, an interactive scatter plot of the rules can be made. Each rule is plotted as a point, where the x axis represents the support and the y axis represent the confidence of the rule.
 
 ```{r}
 rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8) )
@@ -831,9 +831,21 @@ plotly_arules(rules, max = 2000)
 plotly_arules(rules, method = "two-key plot")
 ```
 
+Secondly, an interactive visNetwork can be created. We need to extract the nodes and edges from the rules object.
+
 ```{r}
 library(visNetwork)
-rules <- apriori(Groceries, parameter = list(supp = 0.0001, conf = 0.1, minlen =2, maxlen=2) )
+
+rules <- apriori(
+  Groceries, 
+  parameter = list(
+    supp = 0.0001, 
+    conf = 0.1, 
+    minlen = 2,
+    maxlen=2
+    )
+  )
+
 rulesDF = head(
   sort(rules, by = "lift"),
   n=250
