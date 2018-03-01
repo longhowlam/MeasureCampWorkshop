@@ -66,15 +66,15 @@ Besides the nb.html, you can also "knit" an R notebook / markdown file into an h
 
 ## R Projecten
 
-Organiseer je R werk in projecten. Een project kan bestaan uit verschillende scripts, notebooks, data en output, deze wil je handig in 1 folder hebben. In RStudio kan je heel handig met verschillende R projecten werken. Via de GUI kun je nieuwe projecten aanmaken en beheren: File > New Project...
+Organize your R work in projects. A project can consist of different scripts, notebooks, data and output, which you would like to have in one folder. In RStudio you can work very conveniently with different R projects. Through the RStudio interface you can create and manage projects: File> New Project...
 
 
 ## Git version controle
 
-Git is een version control systeem. In RStudio kan je makkelijk git gebruiken. Je zult het wel eerst moeten installeren. Op windows kan je git installeren via [de git site](https://git-scm.com/download/win). We gaan hier in deze cursus verder niet op in.
+Git is a version control system. In RStudio you can easily use git. You will have to install it first. On Windows you can install git via [the git site] (https://git-scm.com/download/win). We will not discuss this further in this workshop.
 
 
-## Een paar simpele expressie
+## A few simple R expressions to get started
 
 Hieronder een paar simpele expressies in R om te beginnen
 
@@ -108,9 +108,9 @@ test
 
 Alle data in R is van een bepaalde type, we zullen de verschillende data types hieronder behandelen. met de functie `typeof` kan je het type altijd opvragen van een object in R.
 
-## Numerieke data
+## Numerical data
 
-### double
+### double data tupe
 
 De `double` datatype in R wordt vaak gebruikt om numerieke waarden ('alledaagse' getallen te representeren). Denk bijvoorbeeld aan kenmerken van mensen zoals lengte ( 1.85) of gewicht (78.8).  
 
@@ -125,7 +125,7 @@ is.double(x4)
 ```
 
 
-### integer
+### integer data type
 
 Het `integer` data type in R representeren ook numerieke waarden. Alleen in tegenstelling tot doubles representeren ze alleen gehele getallen. Bijvoorbeeld een tel variabelen, aantal kinderen (0, 1, 2,...).
 
@@ -154,7 +154,7 @@ x8 = x4 + x7
 typeof(x8)
 ```
 
-## character
+## character data type
 
 In R kan je met het `character` data type teksten (of ook soms strings genoemd) opslaan. Bewerkingen en manipulaties van characters in sessie 2.
 
@@ -171,12 +171,12 @@ x3 = paste(x1, x2, sep="")
 ```
 
 
-## factor
+## factor data type
 
-In R zijn `factors` bedoeld om categorische variabelen te representeren. Denk aan geslacht, of opleiding. Verwar een factor niet met het type character, je kan factor variabelen wel van character variabelen maken. In sommige predictive modeling functies heb je expliciet factor variabelen nodig en niet character.
+In R, `factors` are meant to represent categorical variables. For example, gender, or education. Do not confuse a factor with the character type, you can create factor variables from character variables. In some predictive modeling functions you explicitly need factor variables and not character.
 
+Consumer data sets may include names or surnames of persons of the type character, but for example the gender or education are often of the type of factor.
 
-In data sets zijn vaak namen of achternamen van personen van het type character, maar bijvoorbeeld geslacht of opleiding van het type factor.
 
 ```{r, eval=FALSE}
 x3 = c("M", "F", "M")
@@ -189,22 +189,8 @@ x3
 y3
 ```
 
-Dit is wel apart
 
-```{r, eval=FALSE}
-typeof(y3)
-is.character(y3)
-is.factor(y3)
-is.integer(y3)
-
-levels(y3)
-levels(x3)
-
-# Dus let op het verschil tussen factors en characters!!!!
-```
-
-
-## logical
+## logical data type
 
 Als je in R een test uitvoert, dan is het resultaat van het type `logical`. We zagen al de functies `is.double` en `is.integer`.
 
@@ -270,9 +256,9 @@ sprintf("%.24f", x)
 ```
 
 
-## missing value
+## missing values
 
-Missende waarden kunnen in R worden gerepresenteerd met `NA`. Je kan missende doubles, integers etc. hebben.
+Missing values can be represented in R with `NA`. You can have missing doubles, integers, etc.
 
 ```{r, eval=FALSE}
 x3 = NA
