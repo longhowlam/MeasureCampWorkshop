@@ -43,23 +43,26 @@ Start with powerpoint slides over R followed by an intro in RStudio:
 
 ## De R Console
 
-De R Console is een plek waar je snel even een kort stukje code wilt runnen. Type daar een R expressie in en Enter om te runnen. Output van scripts verschijnt ook in de R Console.
+The R Console is a place where you can quickly run a short piece of code. Type in an R expression and Enter to run. Output of scripts also appears in the R Console.
+
 
 
 ## Scripts 
 
-Scripts, zijn gewone tekst files (*.R) met R code. In RStudio kan je meerdere scripts openen en bewerken. Scripts die bij elkaar horen kan je in een R Project zetten. Via het File menu > New File > R Script kan je in RStudio een nieuw R script file maken. Of gebruik de short cut: Ctrl+Shift+N.
+R Script files are ordinary text files (*.R) with R code. In RStudio you can open and edit multiple scripts. Scripts that belong together can be put in an R Project. Via the File menu> New File> R Script you can create a new R script file in RStudio. Or use the short cut: Ctrl + Shift + N.
 
-In een script type je R code en als je met de cursor op een regel staat kan je die regel code runnen door Ctrl+Enter in te drukken. Je kan ook meerdere regels selecteren en deze regels runnen door Crtl+Enter. Zie voor meer opties het Code menu en 'Run Region'.
+In an R script you type code and if you move the cursor on a line you can run that line of code by pressing `Ctrl + Enter`. You can also select multiple lies and run these lines with `Crtl + Enter`. For more options see the Code menu and 'Run Region'.
 
 
-## R Notebooks
+## R Notebooks / R Markdown files
 
-R notebooks bevatten meer dan alleen R code, het is een 'compleet' document met R code, output en een beschrijvende verhaallijn. In een R project kun je ook meerdere van deze notebooks en scripts beheren. Notebooks maak je met Rmarkdown, een soort light weight markup language waarin je bijvoorbeeld headers, figuren en vet gedrukt kan specificeren. Deze R cursus werkt met R notebooks. Een notebook bevat **R code chunks** die je kan runnen.
+R notebooks and R Markdown files contain more than just R code, it is a 'complete' document with R code, output and a descriptive storyline. In an R project you can also manage several of these notebooks (or markdown files) and scripts. Note books are created with Rmarkdown, a sort of light weight markup language in which you can specify headers, figures and bold prints, for example. This R course is written in an R markdown file. A notebook / markdown file contains ** R code chunks ** that you can run.
 
-Als je op de 'Preview' knop drukt boven het R notebook krijg je een apart window te zien met het **resultaat van het R notebook**. Er wordt dan ook door RStudio een aparte file gemaakt die de naam <file_naam>.nb.html heeft. Dit is een html file die je kan delen met anderen.
+
+If you press the 'Preview' button above the R notebook you will see a separate window with the **result of the R notebook**. Therefore, RStudio creates a separate file that has the name `<file_name>.nb.html`. This is a html file that you can share with others.
  
-Naast de nb.html, kan je een R notebook ook "knit" ('breien') tot een html, pdf of Word document. De header van het markdown document vertelt hoe het een en ander gebreid moet worden. Zie bijvoorbeeld dit document. Naast de 'Preview' knop zie je een pijltje waaruit je kan kiezen.
+Besides the nb.html, you can also "knit" an R notebook / markdown file into an html, pdf or Word document. The header of the markdown document tells how to knit a few things. See for example this document. Next to the 'Preview' button you will see an arrow from which you can choose.
+
 
 ## R Projecten
 
