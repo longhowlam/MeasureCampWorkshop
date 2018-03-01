@@ -337,7 +337,7 @@ x4 = sample( letters, rep = TRUE, size = 100)
 ```
 
 
-Berekeningen op vectoren gebeuren elements-gewijs
+Calculations on vectors take place on element level by default.
 
 ```{r, eval=FALSE}
 y = 3 * x3 + 8
