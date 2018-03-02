@@ -566,6 +566,11 @@ test = read_excel(
 
 ## RDS files
 
+Je kan R objecten (niet alleen data frames) weg schrijven met de `saveRDS` functie, en deze kunnen weer ingelezen worden met de `readRDS` functie. files die je krijgt zijn binaire bestanden, ze kleiner dan tekst files en zijn sneller om weer in R in te lezen.
+
+```{r, eval = FALSE}
+
+```
 
 ## database connection
 
