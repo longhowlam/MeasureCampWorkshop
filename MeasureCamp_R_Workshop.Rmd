@@ -446,7 +446,7 @@ m2[5,]
 m2[ ,5]
 ```
 
-Met matrices kun je rekenen. Een paar typische matrix bewerkingen.
+If you have matrices in R you can perform mathematical (linear algebra) calculation on them. A few examples: determinant, transpose and inverse.
 
 ```{r, eval =FALSE}
 # determinant van een matrix
@@ -467,7 +467,7 @@ round(m2 %*% solve(m2))
 
 ## data frames
 
-Een data frame kan je zien als een matrix, maar in tegenstelling tot een matrix, kunnen kolommen van een data frame van een andere type zijn. Voor data analyse met 'echte' data zal een data.frame de meest handige structuur zijn. je hebt bijvoorbeeld een factor kolom 'Geslacht', een double kolom met bijvoorbeeld 'geweicht' en je kan een character kolom hebben met 'achternaam'.
+A data frame can be seen as a matrix, but unlike a matrix, columns of a data frame can be of a different type. For data analysis with 'real' data, a data.frame will be the most useful structure. for example, you have a factor column 'Gender', a double column with for example 'fenced' and you can have a character column with 'surname'.
 
 
 ```{r, eval=FALSE}
@@ -536,11 +536,53 @@ df1
 
 ---
 
-## using the gui
+## The 'Import Dataset' gui
 
-## using functions from `readr`
+## Import functions
 
-## data base connection
+Als je met R werkt heb je natuurlijk data nodig, zoals we op bovenstaande manier data hebben gemaakt zal het in de praktijk niet gebeuren met echte data sets. Die leven in data bases of in files
+
+Er zijn een aantal packages die handig zijn om files in te lezen.
+
+* `readr` package, voor tekst files
+* `haven` package voor files van SAS, SPSS, Stata
+* `readxl` voor Excel files
+
+R heeft ook standaard functies voor het inzegen van text files, maar ik gebruik vaak de functies uit het package `readr`. Voor grote files is het veel sneller. En je ziet dan ook een progress bar. In RStudio, kan je de import functies ook aanroepen via de ** Import Dataset ** GUI die het inlezen van data begeleidt.
+
+
+```{r, eval=FALSE}
+### data met restaurants in Nederland
+library(readr)
+Restaurants = read_csv("data/Restaurants.csv")
+
+### Excel files inlezen
+library(readxl)
+test = read_excel(
+  "data/test.xlsx",
+  range = "D8:F14"
+)
+```
+
+## RDS files
+
+
+## database connection
+
+In R you can connect to external databases, like MySQL or SQL Server. You can use odbc, and on Linux there is config file to specify the connection to the specific database. An example is given below where an odbc connection is used to connect to a MySQl database server.
+
+![](odbcini.PNG)
+
+Now that there connection named `my-connector` we can use that in R to connect.
+
+```{r, eval = FALSE}
+library(odbc)
+library(DBI)
+library(dplyr)
+con_sql <- dbConnect(odbc::odbc(), "my-connector")
+cars = tbl(con_sql, "mtcars")
+
+```
 
 
 
