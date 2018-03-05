@@ -597,14 +597,490 @@ cars = tbl(con_sql, "mtcars")
 
 ---
 
-## tidyverse
+## De dplyr library
+
+---
+
+Dit package / library is ontzettend handig om data te bewerken in R. De syntax is elegant en dplyr code kan je in sommige gevallen ook gebruiken voor data die niet in R zit. Bijvoorbeeld, data in Spark kan je met dplyr code bewerken. Er zijn veel 'sleutel' woorden, maar de belangrijkste zijn `select`,  `filter`, `mutate`, `arrange`, `summarize`, `slice` en `rename`. 
+
+Het mooie is dat deze sleutel woorden ook achter elkaar gebruikt kunnen worden met de `%>%` chain operator. We gebruiken als voorbeeld data uit de datasets library. `mtcars` is een klein data set met wat auto gegevens en `iris` is de bekende data set met drie soorten bloemen.
 
 
-## dplyr
+## kolommen selecteren met select
 
-## strings
+```{r, eval=FALSE}
+## enkele kolommen selecteren
+my.cars = select(mtcars, hp, mpg, drat)
 
-## dates
+## via de chain operator, dit is niet alleen handig maar zo kan je verschillende operaties achter elkaar plakken.
+my.cars = mtcars %>% 
+  select(
+    hp, 
+    mpg,
+    drat
+  )
+
+## meerdere kolommen selecteren
+test1 = iris %>% 
+  select(
+    starts_with("Petal")
+  )
+
+## bepaalde kolommen selecteren
+test2 = mtcars %>% 
+  select(
+    contains("pg"),
+    starts_with("c")
+  )
+
+my.cars = mtcars %>% .[2:6]
+```
+
+## kolom maken of wijzigen met mutate
+
+We zagen al dat je kolommen in een data frame kon maken of wijzigen met `$` 
+
+```{r, eval=FALSE}
+my.cars$kolom2  = rnorm(32)
+my.cars$kolom3  = my.cars$kolom2 + 9
+```
+
+Maar met `mutate` kan je dit veel eleganter doen
+
+```{r, eval=FALSE}
+mycars = mtcars %>%
+  select(
+    disp, 
+    mpg 
+  ) %>%
+  mutate(
+    displ_l = disp / 61.0237,
+    tmp = mpg *1000
+  )
+```
+
+Je kan nieuwe kolommen maken die afhankelijk zijn van kolommen die je net in mutate maakt
+
+```{r, eval=FALSE}
+mycars = mtcars %>%
+  mutate(
+    displ_l = disp / 61.0237,
+    tmp = mpg *1000,
+    tmp2 = tmp + 1
+  )
+```
+
+
+## distinct rows
+
+Soms wil je data ontdubbelen, dit kan je in R doen met de functie `distinct`
+
+```{r, eval=FALSE}
+distinct( select(mtcars, carb, gear))
+
+distinct(select(mtcars, 10,11))
+
+### pipe / chain operatie
+myset = mtcars %>% 
+  select(10,11) %>%
+  distinct
+```
+
+
+## data sets filteren
+
+Met `filter` en `slice` kan je rijen uit een data frame halen. 
+
+```{r, eval=FALSE, include=FALSE}
+filter(
+  mtcars, 
+  cyl == 8 & gear > 3
+)
+
+## meerdere filter expressie bekenen EN
+
+filter(
+  mtcars, 
+  cyl == 8,
+  gear > 3
+)
+
+## als je of wilt moet je | gebruiken
+
+filter(
+  mtcars, 
+  cyl == 8 | gear > 3
+)
+```
+
+Met `slice` kan je op basis van row numbers data selecteren. Als voorbeeld, de eerste 8 records, of record 8 tot en met de laatste record.
+
+```{r, eval=FALSE}
+slice(mtcars, 1:8)
+slice(mtcars, 8:n())
+```
+
+## data sets aggregeren
+
+Aggregeren met de functie `group_by` en `summarise` deze gaan vaak hand in hand samen.
+
+```{r, eval=FALSE}
+## apart aanroep van group_by en summarise... zo kan je zien wat group_by oplevert
+by_cyl = group_by(mtcars, cyl) 
+class(by_cyl)
+
+summarise(by_cyl, Naampje1 = mean(disp), Naampje2 = mean(hp))
+
+
+## maar vaak doe je de twee in 1 run samen
+out = mtcars %>%
+  group_by(
+    cyl
+  ) %>% 
+  summarise(
+    mdisp = mean(disp),
+    mhp = mean(hp)
+  )
+
+
+out = filter(
+  mtcars, mpg > 11
+  ) %>%
+  group_by(
+    cyl, 
+    carb
+  ) %>% 
+  summarise(
+    N = n(), 
+    MeanDisp = mean(disp),
+    SD_HP = sd(hp)
+  )
+```
+
+
+## data sets joins
+
+Met dplyr kun je makkelijk tabellen joinen. Er zijn verschillende joins die ondersteunt worden. We geven hier een aantal voorbeelden.
+
+
+```{r, eval=FALSE}
+### maak twee data frames aan
+df1 = data.frame(
+  col1 = c(1,2,3,4,5), tt = rnorm(5)
+)
+
+df2 = data.frame(
+  col1 = c(3,4,5,6,7), xx = rnorm(5), zz = runif(5)
+)
+
+## selecteer rijen die zowel in df1 en df2 zitten 
+df3 = inner_join(
+  df1, 
+  df2,
+  by = c("col1" = "col1")
+)
+
+## alle rijen die in df1 zitten, geen match levert NA op
+df4 = left_join(
+  df1,
+  df2,
+  by = c("col1" = "col1")
+)
+
+## alle rijen die in df2 zitten
+df5 = df1 %>% right_join(
+  df2,
+  by = c("col1" = "col1")
+)
+
+## alleen de rijen van df1 die niet in df 2 zitten
+df6 = df1 %>% anti_join(
+  df2,
+  by = c("col1" = "col1")
+)
+
+## alle rijen van df1 en df2
+full_join(df1, df2, by = c("col1" = "col1"))
+```
+
+
+<br>
+
+## data frames stapelen of plakken
+
+Soms wil je twee tabellen op elkaar stappelen tot een nieuwe tabel, dat kan je doen met `bind_rows`. Als je twee tabellen naast elkaar wilt zetten tot een nieuwe tabel, gebruik dan `bind_rows`.
+
+```{r, eval=FALSE}
+## bind_rows
+A = data.frame(x=1:5, y = rnorm(5))
+B = data.frame(x=11:15, y = rnorm(5))
+C = bind_rows(A,B)
+
+## kolommen die niet in een van de data frames zitten worden aangevuld
+E = data.frame(x=21:25, y = rnorm(5), z = rnorm(5))
+
+bind_rows(A,E)
+```
+
+```{r, eval=FALSE}
+A = data.frame(x=1:5, y = rnorm(5))
+B = data.frame(q=11:15, q = rnorm(5))
+bind_cols(A,B)
+
+## als een van de data frames meer rijen heeft, dan wordt er NIET aangevuld
+A = data.frame(x=1:5, y = rnorm(5))
+B = data.frame(q=11:17, q = rnorm(7))
+bind_cols(A,B)
+```
+
+<br>
+
+## Tidy data en wide data
+
+---
+
+Tidy data is wanneer data in de volgende vorm zit:
+
+* Elke variabele is in een kolom.
+* Elke observatie is een rij.
+* Elke waarde is een cel.
+
+Stel we hebben de volgende data set
+
+```{r, eval=FALSE}
+library(tidyr)
+stocks <- data.frame(
+  time = as.Date('2009-01-01') + 0:9,
+  X = rnorm(10, 0, 1),
+  Y = rnorm(10, 0, 2),
+  Z = rnorm(10, 0, 4)
+)
+stocks
+```
+
+Soms is het handig om data waarden in 1 kolom te hebben en een aparte variabele die de variabele weergeeft
+
+```{r, eval=FALSE}
+stocksm <- stocks %>% gather(stock, price, -time)
+stocksm
+```
+
+en spread is het omgekeerde proces
+
+```{r, eval=FALSE}
+stock2 = stocksm %>% spread(stock, price)
+stock2
+ 
+## als er niet even veel observaties zijn?
+
+test = data.frame(
+  T = c(1,2,3,1,2), 
+  V = c("A","A","A","B","B"),
+  price = c(4,5,6,7,8)
+)
+
+test2 = test %>% spread(V,price)
+test2
+```
+
+Een handige functie in tidyr is `separate`, dit kan je gebruiken om een kolom uit elkaar te trekken. Standaard worden niet alpha numerieke tekens als separator gebruikt.
+
+```{r, eval=FALSE}
+df = tibble(x = c("A.B", "C.P", "P.Q"))
+df %>% separate(x, c("Kol1", "Kol2"))
+
+## Er kunnen tw weinig of teveel kolommen zijn.
+df = tibble(x = c("A.B", "C.P", "P.Q", "pp", "P.2.4"))
+df %>% separate(x, c("Kol1", "Kol2"))
+
+
+df = tibble(x = c("A.B", "C.P", "P.Q", "pp", "P.2.4"))
+df %>% separate(x, c("Kol1", "Kol2", "Kol3"))
+```
+
+<br>
+
+
+## Character data bewerken met stringr
+
+---
+
+Character data in R kan je bewerken/manipuleren met het `stringr` package. Voordat we daar verder op in gaan is het handig om te weten wat reguliere expressies zijn.
+
+## Reguliere expressies
+
+Dit is een soort 'mini' taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken. Eerst wat dummy character data.
+
+```{r, eval=FALSE}
+test = c("Mijn nummer is 06-12345678", "dit is .. een 1628EP postcode test", "foutje?:  0234XD", "dit is er nog een 1628 EP", "en nog een foute 126EP", "nog een 1234    XX", "1234eZ en nog 4567PK", "12345 Aabcde", "&yfy.")
+test
+```
+
+Een paar voorbeelden van reguliere expressies.
+
+```{r, eval=FALSE}
+library(stringr)
+
+## een digit, en precies 1 digit
+patroon = "\\d"
+str_extract(test, patroon)
+
+## 1 of meerdere digits
+patroon = "\\d+"
+str_extract(test, patroon)
+
+## precies twee letters
+patroon ="[[:alpha:]]{2}"
+str_extract(test, patroon)
+
+## Een postcode
+patroon = "\\d{4}\\s?[[:alpha:]]{2}"
+str_extract(test, patroon)
+
+## Maar een postcode begint niet met een 0
+patroon = "[1-9]\\d{3}\\s?[[:alpha:]]{2}"
+str_extract(test, patroon)
+
+## special punctuation characters !"#$%&’()*+,-./:;<=>?@[]^_`{|}~
+patroon = "[[:punct:]]"
+str_extract(test, patroon)
+```
+
+Sommige mensen zijn de wildcard notatie gewend om te zoeken in strings, deze wildcard notatie kan je vertalen naar reguliere expressies met `glob2rx`. Een paar voorbeelden zullen hieronder geven. 
+
+```{r, eval=FALSE}
+patroon = glob2rx("*23*")
+str_extract(test, patroon)
+```
+
+Voor een cheatsheet over reguliere expressies zie [regex cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
+
+
+## Dates and times in R
+
+---
+
+Voor datums (en tijden) in R zijn de packages `anytime` en `lubridate` heel handig. Laten we er van uitgaan dat we characters hebben met datums en daar mee willen rekenen. Dan kunnen we de functie `anydate` uit het anytime package gebruiken of een van de `ymd` functies.
+
+```{r, eval=FALSE}
+library(lubridate)
+library(anytime)
+
+y = c("1973-09-12", "1980-05-23", "1981-12-09")
+
+testdata = tibble(DoB = y)
+
+testdata = testdata %>%
+  mutate(
+    GeboorteDatum = anydate(DoB),
+    GeboorteDatum2 = ymd(DoB)
+  )
+```
+
+De functie `anydate` parsed diverse character notatie naar een date kolom, de gaat meestal goed :-)
+
+```{r, eval=FALSE}
+y = c("1973/09/12", "05/23/1980", "23/05/1980","1981-12-09")
+
+testdata = tibble(DoB = y)
+
+testdata = testdata %>%
+  mutate(
+    GeboorteDatum = anydate(DoB)
+  )
+```
+
+Nu we een datum echt als date column in een data frame of tibble hebben kunnen we er mee rekenen.
+
+```{r, eval=FALSE}
+testdata = testdata %>%
+  mutate(
+    leeftijd = today() - GeboorteDatum,
+    leeftijd2 = as.numeric(today() - GeboorteDatum)/365,
+    dag = wday(GeboorteDatum, label=TRUE)
+  )
+```
+
+*UNIX time stamps*....  Wat zeg je?
+
+Een Unix time stamps is het aantal seconden sinds 1-1-1970. Mocht je dit ooit tegen komen dan kan anytime er ook mee uit de voeten.
+
+```{r, eval=FALSE}
+tmp = read_csv("data/unixtimestamps.csv")
+tmp$datum = anydate(tmp$timestamp)
+tmp
+```
+
+
+Tijdstippen kunnen in R ook worden weergegven met times
+
+
+```{r}
+tmp = paste("2018-01-23", c("12:01:33", "12:01:38", "12:01:58"))
+Waarde = c(2.4, 5.6, 7.8)
+
+MeetData = tibble(tmp = tmp, Waarde= Waarde)
+
+MeetData = MeetData %>% 
+  mutate(
+    Meettijdstip = ymd_hms(tmp)
+  )
+
+```
+
+
+### durations en intervals
+
+Als je in R twee datums/times van elkaar aftrekt krijg je in R een duration 
+
+```{r}
+MeetData = MeetData %>% 
+  mutate(
+    duur = ymd_hms("2018-02-01 00:00:00") - ymd_hms(tmp)
+  )
+
+```
+
+Ja kan durations ook zelf maken en optellen bij een datum
+
+```{r}
+testduur = dweeks(3)
+testduur = dweeks(3.1)
+class(testduur)
+
+MeetData = MeetData %>% 
+  mutate(
+   t2 = Meettijdstip + dyears(2),
+   t3 = Meettijdstip + dseconds(1800),
+   t4 = Meettijdstip + dweeks(3)
+   
+  )
+
+```
+
+
+In R heb je ook zogenaamde `interval` objecten, dit is de tijdsperiode tussen een start en eind datum. Hiermee kan je de leeftijd in jaren ook precies uitrekenen.
+
+```{r}
+
+y = c("1973-09-12", "1973-01-09")
+
+testdata = tibble(DoB = y)
+
+testdata = testdata %>%
+  mutate(
+    GeboorteDatum = anydate(DoB),
+    interval1 = interval(GeboorteDatum, today()),
+    interval2 = GeboorteDatum %--% today(),
+    leeftijd = interval1 %/% years(1)
+  )
+
+testdata
+
+# NB %/% is de integer division in R
+13 / 6
+13 %/% 6
+```
 
 
 
@@ -620,6 +1096,7 @@ cars = tbl(con_sql, "mtcars")
 
 ## visnetwork
 
+restaurant edges
 
 
 # Machine learning
