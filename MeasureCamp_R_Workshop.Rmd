@@ -110,7 +110,7 @@ All data in R is of a certain type, we will discuss the different data types bel
 
 ## Numerical data
 
-### double data tupe
+### Double data type
 
 The `double` datatype in R is often used to represent numerical values ('everyday' numbers). For example, consider characteristics of people such as height (1.85) or weight (78.8).
 
@@ -124,7 +124,7 @@ is.double(x4)
 ```
 
 
-### integer data type
+### Integer data type
 
 The `integer` data type in R also represent numerical values. In contrast to doubles they represent only natural numbers. For example, a count variable: number of children (0, 1, 2, ...).
 
@@ -154,7 +154,7 @@ x8 = x4 + x7
 typeof(x8)
 ```
 
-## character data type
+## Character data type
 
 In R you can use the `character` data type to work with texts (text data), or often also called strings. Operations and manipulations of characters are explained later on in this workshop.
 
@@ -172,7 +172,7 @@ x3 = paste(x1, x2, sep="")
 ```
 
 
-## factor data type
+## Factor data type
 
 In R, `factors` are meant to represent categorical variables. For example, gender, or education. Do not confuse a factor with the character type, you can create factor variables from character variables. In some predictive modeling functions you explicitly need factor variables and not character.
 
@@ -191,7 +191,7 @@ y3
 ```
 
 
-## logical data type
+## Logical data type
 
 If you run a test in R, then the result is of the type `logical`. We already saw the functions `is.double` and` is.integer`, which returned an object of type logical.
 
@@ -265,7 +265,7 @@ sprintf("%.24f", x)
 ```
 
 
-## missing values
+## Missing values
 
 Missing values can be represented in R with `NA`. You can have missing doubles, integers, etc.
 
@@ -296,7 +296,7 @@ is.na(x4)
 
 Data in R kan in verschillende vormen verschijnen, de zogenaamde data structuren. We zullen hieronder een aantal basis structuren behandelen.
 
-## vectors
+## Vectors
 
 Vectoren worden gebruikt om een 'rijtje' elementen op te slaan. Je kan een vector van doubles hebben, characters etc... Alle elementen kunnen alleen van hetzelfde type zijn!
 
@@ -369,7 +369,7 @@ y <- cut(x, 4)
 
 
 
-### subscripting of vectors
+### Subscripting of vectors
 
 Hoe benader je elementen in een vector? Dat kan met subscripts
 
@@ -465,7 +465,7 @@ m2 * solve(m2)
 round(m2 %*% solve(m2))
 ```
 
-## data frames
+## Data frames
 
 A data frame can be seen as a matrix, but unlike a matrix, columns of a data frame can be of a different type. For data analysis with 'real' data, a data.frame will be the most useful structure. for example, you have a factor column 'Gender', a double column with for example 'fenced' and you can have a character column with 'surname'.
 
@@ -606,7 +606,7 @@ Dit package / library is ontzettend handig om data te bewerken in R. De syntax i
 Het mooie is dat deze sleutel woorden ook achter elkaar gebruikt kunnen worden met de `%>%` chain operator. We gebruiken als voorbeeld data uit de datasets library. `mtcars` is een klein data set met wat auto gegevens en `iris` is de bekende data set met drie soorten bloemen.
 
 
-## kolommen selecteren met select
+### kolommen selecteren met select
 
 ```{r, eval=FALSE}
 ## enkele kolommen selecteren
@@ -636,7 +636,7 @@ test2 = mtcars %>%
 my.cars = mtcars %>% .[2:6]
 ```
 
-## kolom maken of wijzigen met mutate
+### kolom maken of wijzigen met mutate
 
 We zagen al dat je kolommen in een data frame kon maken of wijzigen met `$` 
 
@@ -671,7 +671,7 @@ mycars = mtcars %>%
 ```
 
 
-## distinct rows
+### distinct rows
 
 Soms wil je data ontdubbelen, dit kan je in R doen met de functie `distinct`
 
@@ -687,7 +687,7 @@ myset = mtcars %>%
 ```
 
 
-## data sets filteren
+### data sets filteren
 
 Met `filter` en `slice` kan je rijen uit een data frame halen. 
 
@@ -720,7 +720,7 @@ slice(mtcars, 1:8)
 slice(mtcars, 8:n())
 ```
 
-## data sets aggregeren
+### data sets aggregeren
 
 Aggregeren met de functie `group_by` en `summarise` deze gaan vaak hand in hand samen.
 
@@ -758,7 +758,7 @@ out = filter(
 ```
 
 
-## data sets joins
+### data sets joins
 
 Met dplyr kun je makkelijk tabellen joinen. Er zijn verschillende joins die ondersteunt worden. We geven hier een aantal voorbeelden.
 
@@ -806,7 +806,7 @@ full_join(df1, df2, by = c("col1" = "col1"))
 
 <br>
 
-## data frames stapelen of plakken
+## Data frames stapelen of plakken
 
 Soms wil je twee tabellen op elkaar stappelen tot een nieuwe tabel, dat kan je doen met `bind_rows`. Als je twee tabellen naast elkaar wilt zetten tot een nieuwe tabel, gebruik dan `bind_rows`.
 
@@ -907,7 +907,7 @@ df %>% separate(x, c("Kol1", "Kol2", "Kol3"))
 
 Character data in R kan je bewerken/manipuleren met het `stringr` package. Voordat we daar verder op in gaan is het handig om te weten wat reguliere expressies zijn.
 
-## Reguliere expressies
+### Reguliere expressies
 
 Dit is een soort 'mini' taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken. Eerst wat dummy character data.
 
@@ -1015,7 +1015,7 @@ tmp
 Tijdstippen kunnen in R ook worden weergegven met times
 
 
-```{r}
+```{r, eval=FALSE}
 tmp = paste("2018-01-23", c("12:01:33", "12:01:38", "12:01:58"))
 Waarde = c(2.4, 5.6, 7.8)
 
@@ -1033,7 +1033,7 @@ MeetData = MeetData %>%
 
 Als je in R twee datums/times van elkaar aftrekt krijg je in R een duration 
 
-```{r}
+```{r, eval=FALSE}
 MeetData = MeetData %>% 
   mutate(
     duur = ymd_hms("2018-02-01 00:00:00") - ymd_hms(tmp)
@@ -1043,7 +1043,7 @@ MeetData = MeetData %>%
 
 Ja kan durations ook zelf maken en optellen bij een datum
 
-```{r}
+```{r, eval=FALSE}
 testduur = dweeks(3)
 testduur = dweeks(3.1)
 class(testduur)
@@ -1061,7 +1061,7 @@ MeetData = MeetData %>%
 
 In R heb je ook zogenaamde `interval` objecten, dit is de tijdsperiode tussen een start en eind datum. Hiermee kan je de leeftijd in jaren ook precies uitrekenen.
 
-```{r}
+```{r, eval=FALSE}
 
 y = c("1973-09-12", "1973-01-09")
 
@@ -1144,7 +1144,7 @@ Je ziet dat er wat outliers in de data zitten, die kunnen we nog eens er uit fil
 ```{r, eval=FALSE}
 library(dplyr)
 jaap = jaap %>% filter( prijs < 2000000 )
-modelout  = lm( prijs ~ kamers              , data = jaap)
+modelout  = lm( prijs ~ kamers               , data = jaap)
 modelout2 = lm( prijs ~ kamers + Oppervlakte , data = jaap) 
 ```
 
@@ -1162,39 +1162,28 @@ ggplot2::autoplot(modelout)
 Modellen in R kan je specificeren met zogenaamde de formula objects. Hieronder zie je een aantal voorbeelden.
 
 ```{r, eval = FALSE}
-names(jaap)
 jaap = jaap %>% mutate(PC1Positie = stringr::str_sub(PC,1,1))
-
-jaap = jaap %>% filter(
-  !is.na(Oppervlakte),
-  !is.na(kamers),
-  !is.na(PC1Positie)
-  )
 
 f0 = prijs ~ Oppervlakte + kamers 
 m0 = lm(f0, data = jaap)
-m0
 summary(m0)
 
 f1 = prijs ~ Oppervlakte + kamers + PC1Positie
 m1 = lm(f1, data = jaap)
-m1
 summary(m1)
 
-
 ## interactie termen
-f2 = prijs ~ Oppervlakte*kamers*PC1Positie
+f2 = prijs ~ Oppervlakte + kamers + PC1Positie + Oppervlakte*PC1Positie
 m2 = lm(f2, data = jaap)
 summary(m2)
 
-
-##  termen weglaten
-f3 = prijs ~ Oppervlakte*kamers*PC1Positie - Oppervlakte:kamers:PC1Positie
+## interactie termen
+f3 = prijs ~ Oppervlakte + kamers + PC1Positie + Oppervlakte*PC1Positie +  Oppervlakte*kamers
 m3 = lm(f3, data = jaap)
 summary(m3)
 
-## een target en de rest van de variabelen als inputs
-f4 = prijs ~ . -PC6 -PC
+##  interactietermen
+f4 = prijs ~ Oppervlakte*kamers*PC1Positie 
 m4 = lm(f4, data = jaap)
 summary(m4)
 ```
@@ -1204,8 +1193,23 @@ Als je verschillende model objecten hebt gemaakt kan je de functie `anova` gebru
 
 
 ```{r, eval =FALSE}
-anova(m0, m1, m3, m2)
+anova(m0, m1, m2, m3, m4)
 ```
+
+
+
+```{r, eval=FALSE}
+##  termen weglaten
+f5 = prijs ~ Oppervlakte*kamers*PC1Positie - Oppervlakte:kamers:PC1Positie
+m5 = lm(f5, data = jaap)
+summary(m5)
+
+## een target en de rest van de variabelen als inputs
+f6 = prijs ~ . -PC6 -PC
+m6 = lm(f6, data = jaap)
+summary(m6)
+```
+
 
 ### Buckets / linear constant  en splines 
 
