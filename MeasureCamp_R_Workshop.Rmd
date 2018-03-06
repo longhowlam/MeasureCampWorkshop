@@ -592,6 +592,11 @@ cars = tbl(con_sql, "mtcars")
 
 ```
 
+
+In the RStudio GUI you can see (only for certain connectiions) the data tables in the data base server.
+
+![](connections.PNG)
+
 For more details on connectring R rto a database see [this website](https://db.rstudio.com/overview).
 
 ---
