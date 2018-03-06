@@ -293,15 +293,16 @@ is.na(x4)
 
 ---
 
+Data in R can appear in different forms, the so-called data structures. We will discuss a number of basic structures below.
 
-Data in R kan in verschillende vormen verschijnen, de zogenaamde data structuren. We zullen hieronder een aantal basis structuren behandelen.
 
 ## Vectors
 
-Vectoren worden gebruikt om een 'rijtje' elementen op te slaan. Je kan een vector van doubles hebben, characters etc... Alle elementen kunnen alleen van hetzelfde type zijn!
+Vectors are used to store a 'row' of elements. You can have a vector of doubles, characters etc ... All elements can only be of the same type!
+
 
 ```{r, eval=FALSE}
-## een getal is ook al een vectpr, van lengte 1
+## een getal is ook al een vector, van lengte 1
 x0 = 1
 
 x1 = c( 1, 2, 3, 4, 5)
@@ -314,7 +315,8 @@ typeof(x2)
 x3 = c("p", 2)
 ```
 
-Er zijn diverse functies in R die je kan gebruiken om vectoren te genereren zonder alle elementen een voor een in te typen :-)
+There are several functions in R that you can use to generate vectors without typing all the elements one by one :-)
+
 
 ```{r, eval = FALSE}
 x1 = 1:1000
@@ -329,8 +331,7 @@ x3 = c( x0, rnorm(100))
 class(x4)
 ```
 
-
-Het genreren van wat random getallen is handig om snel wat data te hebben om te testen, in R zijn er diverse functies.
+Generating some random numbers is useful for quickly having some data to test, in R there are various functions.
 
 ```{r, eval=FALSE}
 # normaal verdeelde getallen
@@ -360,7 +361,7 @@ x4 = rep(x4,8)
 x5 = rep(1:10, each = 3)
 ```
 
-De functie `cut` om factor vectoren te maken uit double vectoren
+The `cut` function to make factor vectors from double vectors.
 
 ```{r}
 x <- rnorm(100)
@@ -371,7 +372,7 @@ y <- cut(x, 4)
 
 ### Subscripting of vectors
 
-Hoe benader je elementen in een vector? Dat kan met subscripts
+How do you approach elements in a vector? That is possible with subscripts.
 
 ```{r, eval=FALSE}
 ## R begint te tellen bij 1
@@ -389,7 +390,7 @@ x3[8.9]
 x3[  8:17  ] = 0
 ```
 
-Je kan ook een vector van TRUE/FALSE opgeven als subscript.
+You can also specify a vector of TRUE / FALSE as a subscript.
 
 ```{r, eval=FALSE}
 x = rnorm(100)
@@ -397,7 +398,7 @@ x[x > 2]
 
 ```
 
-Een paar simpele functies die je op vectoren kan toepassen
+A few simple functions that you can apply to vectors
 
 ```{r, eval=FALSE}
 y = rnorm(1000)
@@ -415,7 +416,8 @@ sum(y < 0)
 
 ##  Matrices
 
-Een matrix is een verzameling van vectoren die even lang zijn. Je kan rechthoekige (aantal rijen anders dan aantal kolommen) of vierkande matrices (aantal rijen = aantal kolommen) hebben.
+A matrix is a collection of vectors that are of the same length. You can have rectangular matrices (number of rows smaller or larger than number of columns) or you can have square matrices (number of rows = number of columns).
+
 
 ```{r, eval=FALSE}
 ## maak een matrix van een vector
@@ -434,7 +436,7 @@ m3 = cbind(x,y,z)
 m4 = rbind(x,y,z)
 ```
 
-Net als vectoren kan je elementen in een matrix benaderen met subscripts, hieronder volgen een aantal voorbeelden.
+Just like vectors you can access elements in a matrix with subscripts, below are a few examples.
 
 ```{r, eval = FALSE} 
 m2[1,5]
@@ -467,7 +469,7 @@ round(m2 %*% solve(m2))
 
 ## Data frames
 
-A data frame can be seen as a matrix, but unlike a matrix, columns of a data frame can be of a different type. For data analysis with 'real' data, a data.frame will be the most useful structure. for example, you have a factor column 'Gender', a double column with for example 'fenced' and you can have a character column with 'surname'.
+A data frame can be seen as a matrix, but unlike a matrix, columns of a data frame can be of a different data type. For data analysis with 'real' data, a data frame will be the most useful structure. For example, you have a factor column 'Gender', double columns with 'Age' and 'Income' and you can have a character column with 'surname'.
 
 
 ```{r, eval=FALSE}
@@ -487,7 +489,7 @@ df1 = data.frame(
 head(df1,10)
 ```
 
-De volgende functies kan je gebruiken om wat extra info van een data frame te laten zien.
+The following functions can be used to show some extra information from a data frame.
 
 ```{r, eval=FALSE}
 # laat de namen van de kolommen zien
@@ -516,7 +518,8 @@ class(mydf$type)
 ## Dit is ook in de Environment viewer te zien
 ```
 
-Je kan net als bij matrices subscripts gebruiken in data frame om bepaalde data uit een data.frame te halen
+
+Just like with matrices, you can use subscripts in data frames to extract certain parts from a data frame.
 
 ```{r, eval=FALSE}
 df1[1,3]
