@@ -575,9 +575,9 @@ Je kan R objecten (niet alleen data frames) weg schrijven met de `saveRDS` funct
 
 ```
 
-## database connection
+## Database connection
 
-In R you can connect to external databases, like MySQL or SQL Server. You can use odbc, and on Linux there is config file to specify the connection to the specific database. An example is given below where an odbc connection is used to connect to a MySQl database server.
+In R you can connect to external databases, like MySQL, Apache HIVE or SQL Server. You can use odbc, and on Linux there is config file to specify the connection to the specific database. An example is given below where an odbc connection is used to connect to a MySQl database server.
 
 ![](odbcini.PNG)
 
@@ -592,7 +592,7 @@ cars = tbl(con_sql, "mtcars")
 
 ```
 
-
+For more details on connectring R rto a database see [this website](https://db.rstudio.com/overview).
 
 ---
 
