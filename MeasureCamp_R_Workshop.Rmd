@@ -112,7 +112,7 @@ All data in R is of a certain type, we will discuss the different data types bel
 
 ### Double data type
 
-The `double` datatype in R is often used to represent numerical values ('everyday' numbers). For example, consider characteristics of people such as height (1.85) or weight (78.8).
+The `double` datatype in R is often used to represent numerical values, (let's day 'everyday' numbers). For example, in a medical data set, height (1.85) or weight (78.8) of patients.
 
 ```{r, eval=FALSE}
 x4 = 4
@@ -126,7 +126,7 @@ is.double(x4)
 
 ### Integer data type
 
-The `integer` data type in R also represent numerical values. In contrast to doubles they represent only natural numbers. For example, a count variable: number of children (0, 1, 2, ...).
+The `integer` data type in R also represent numerical values. In contrast to doubles they represent only natural numbers. For example, a count variable: number of children (0, 1, 2, ... ).
 
 
 ```{r, eval=FALSE}
