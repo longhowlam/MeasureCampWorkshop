@@ -32,7 +32,6 @@ output:
 
 ---
 
-
 Start with powerpoint slides over R followed by an intro in RStudio:
 
 * Console,
@@ -1275,17 +1274,84 @@ ggplot(NieuweHuizen, aes(x=Oppervlakte, y = prijs2)) + geom_point() + geom_point
 
 ## Classification
 
-We use insurance data from the library `insuranceData` to demonstrate classification models.
+We use insurance data from the library `insuranceData` to demonstrate classification models. This data set is based on anonymized one-year vehicle insurance policies taken out in 2004 or 2005. There are 67856 policies, of
+which 4624 (6.8%) had at least one claim. 
 
+Variables:
 
-descion tree plotten
-```{r, eval = FALSE}
+* veh_value	vehicle value, in $10,000s
+* exposure	0-1
+* clm		occurrence of claim (0 = no, 1 = yes)
+* numclaims	number of claims
+* claimcst0	claim amount (0 if no claim)
+* veh_body	vehicle body, for example hatchback, minivan etc.
+* veh_age	age of vehicle: 1 (youngest), 2, 3, 4
+* gender		gender of driver: M, F
+* area		driver's area of residence: A, B, C, D, E, F
+* agecat		driver's age category: 1 (youngest), 2, 3, 4, 5, 6
+
+```{r, eval=FALSE}
+### libraries needed
+library(insuranceData)
+library(yardstick)
 library(rpart)
-# Complex tree
-data("solder")
-res <- rpart(Opening~., data = solder, control = rpart.control(cp = 0.00005))
-visTree(res, height = "800px", nodesPopSize = TRUE, minNodeSize = 10, maxNodeSize = 30)
+library(visNetwork)
+library(h2o)
+library(rsample)
+
+data("dataCar")
 ```
+
+### split data set
+
+```{r, eval=FALSE}
+TT = rsample::initial_split(dataCar)
+trainData = training(TT)
+testData = testing(TT)
+```
+
+
+
+### logistic regression
+
+### decision tree
+
+
+```{r, eval=FALSE}
+cars_tree = rpart(clm ~ . -numclaims - claimcst0, data = trainData)
+plot(cars_tree)
+text(cars_tree)
+
+cars_tree = rpart(
+  clm ~ . -numclaims - claimcst0, 
+  data = trainData,
+  control = rpart.control(cp = 0.0002)
+)
+
+visTree(
+  cars_tree, 
+  height = "800px", 
+  nodesPopSize = TRUE, 
+  minNodeSize = 10, maxNodeSize = 30
+)
+
+```
+
+
+### randomforest and boosted trees
+
+
+
+## Variable importance
+
+
+## How good is the model?
+
+
+
+
+
+
 
 
 ## Market basket analysis
