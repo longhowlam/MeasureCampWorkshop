@@ -1297,9 +1297,20 @@ library(rpart)
 library(visNetwork)
 library(h2o)
 library(rsample)
+library(dplyr)
 
 data("dataCar")
 ```
+
+The target should be a factor variable when doing classification
+
+```{r}
+dataCar = dataCar %>%
+  mutate(
+    Target = as.factor(clm)
+  )
+```
+
 
 ### split data set
 
@@ -1325,7 +1336,7 @@ We can use the function `glm` in R to fit / train logistic regression models in 
 
 ```{r, eval = FALSE}
 cars_glm = glm(
-  clm ~ veh_value + exposure + gender + veh_body + area + veh_age,
+  Target ~ veh_value + exposure + gender + veh_body + area + veh_age,
   data = trainData,
   family = binomial
 )
@@ -1341,14 +1352,14 @@ Interpretation of the coefficient $c$ for a variable $x$ is as follows. One unit
 A decision tree is a recursive partioning of the data. High over, it splits data into two parts based so that the mean target values in the two pieces differ the most. 
 
 ```{r, eval=FALSE}
-cars_tree = rpart(clm ~ . -numclaims - claimcst0, data = trainData)
+cars_tree = rpart(Target ~ . -numclaims - claimcst0 - clm, data = trainData)
 plot(cars_tree)
 text(cars_tree)
 
 cars_tree = rpart(
-  clm ~ . -numclaims - claimcst0, 
+  Target ~ . -numclaims - claimcst0 - clm, 
   data = trainData,
-  control = rpart.control(cp = 0.0002)
+  control = rpart.control(cp = 0.00027)
 )
 
 visTree(
@@ -1371,21 +1382,24 @@ library(h2o)
 h2o.init()
 
 allvars = names(trainData)
-exclude_vars = c("clm", "X_OBSTAT_", "numclaims", "claimcst0" )
+exclude_vars = c("Target", "clm", "X_OBSTAT_", "numclaims", "claimcst0" )
 inputvars = allvars[ ! allvars %in% exclude_vars]
 
 trainh2o = as.h2o(trainData)
-forest = h2o.randomForest(
-  x= inputvars,
-  y= "clm",
-  training_frame = trainh2o 
-)
+testh2o = as.h2o(testData)
 
+forest = h2o.gbm(
+  x= inputvars,
+  y= "Target",
+  training_frame = trainh2o ,
+  validation_frame = testh2o
+)
 ```
 
 
-
 ## Variable importance
+
+A nice output of tree based methods are the variable importance statistics. If an input variable is used often in splitting, then that variable is important. For our claims data set we can see which variable were important in building the tree and which variables were not important.
 
 ```{r, eval=FALSE}
 cars_tree$variable.importance
@@ -1394,6 +1408,32 @@ h2o.varimp_plot(forest)
 
 
 ## How good is the model?
+
+We have used only a part of all claims to train the model. Now we use the other part, the test set to evaluate the model. We use the model to predict for each each person in the test set the propability that he/she will claim. We know the actual result so hopefully people with high predicted probability are the ones who actualy claimed.
+
+```{r}
+
+## linear model
+testData = testData %>% mutate(
+  glm_prediction = predict(cars_glm, newdata = testData, type = "response")
+)
+
+## decision tree
+testData = testData %>% mutate(
+  tree_prediction = predict(cars_tree, newdata = testData)[,2]
+)
+
+```
+
+lift curves op 10%
+
+Area under roc
+
+```{r, eval = FALSE}
+testData %>% roc_auc(Target, prediction)
+testData %>% roc_auc(Target, tree_prediction)
+
+```
 
 
 
