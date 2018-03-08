@@ -1357,17 +1357,39 @@ visTree(
   nodesPopSize = TRUE, 
   minNodeSize = 10, maxNodeSize = 30
 )
-
 ```
 
 
 ### Random forest and Boosted trees
 
+A single decision tree is a nice interpretable model, but often the predictive power is not good, the model might be too simple. The last say, 8 years, Random Forests and boosted trees, became very popular. They are so called ensemble methods, a collection of multiple trees. 
+
+The package h2o has a good implementation of Random Forests and boosted trees. This library has its own execution engine, data need to be transfererd from R to h2o.
+
+```{r}
+library(h2o)
+h2o.init()
+
+allvars = names(trainData)
+exclude_vars = c("clm", "X_OBSTAT_", "numclaims", "claimcst0" )
+inputvars = allvars[ ! allvars %in% exclude_vars]
+
+trainh2o = as.h2o(trainData)
+forest = h2o.randomForest(
+  x= inputvars,
+  y= "clm",
+  training_frame = trainh2o 
+)
+
+```
+
 
 
 ## Variable importance
+
 ```{r, eval=FALSE}
 cars_tree$variable.importance
+h2o.varimp_plot(forest)
 ```
 
 
