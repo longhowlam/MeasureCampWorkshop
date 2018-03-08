@@ -1220,7 +1220,7 @@ summary(m6)
 
 ### Buckets / linear constant  en splines 
 
-Als een input variable niet linear is mbt de target kan je deze niet lineariteit modelleren met buckets (linear constante stukken) of met splines.
+Als een input variable niet linear is m.b.t. de target kan je deze niet lineariteit modelleren met buckets (linear constante stukken) of met splines.
 
 ```{r, eval = FALSE}
 library(ggplot2)
@@ -1311,11 +1311,37 @@ testData = testing(TT)
 ```
 
 
+### Logistic regression
 
-### logistic regression
+A logistic regression can be seen as a generalisation of the linear regression model. It is a linear regression model in the *log odds*. When you plot a binairy target against an input variable, it is often hard to see a relation. Use a smoothing plot.
 
-### decision tree
+```{r}
+library(ggplot2)
+ggplot(trainData, aes(x=exposure,y=clm)) + geom_point()
 
+ggplot(trainData, aes(x=exposure,y=clm)) + geom_smooth()
+
+```
+
+
+We can use the function `glm` in R to fit / train logistic regression models in R.
+
+```{r, eval = FALSE}
+cars_glm = glm(
+  clm ~ veh_value + exposure + gender + veh_body + area + veh_age,
+  data = trainData,
+  family = binomial
+)
+
+summary(cars_glm)
+```
+
+Interpretation of the coefficient $c$ for a variable $x$ is as follows. One unit increase in the variable $x$ means $\exp(c)$ more likely that you will claim. So positive coefficient values mean increase of claim probability when $x$ increases, and negative values mean a decrease of claim probaility when $x$ increases.
+
+
+### Decision tree
+
+A decision tree is a recursive partioning of the data. High over, it splits data into two parts based so that the mean target values in the two pieces differ the most. 
 
 ```{r, eval=FALSE}
 cars_tree = rpart(clm ~ . -numclaims - claimcst0, data = trainData)
@@ -1338,11 +1364,14 @@ visTree(
 ```
 
 
-### randomforest and boosted trees
+### Random forest and Boosted trees
 
 
 
 ## Variable importance
+```{r, eval=FALSE}
+cars_tree$variable.importance
+```
 
 
 ## How good is the model?
