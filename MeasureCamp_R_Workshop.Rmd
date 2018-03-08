@@ -9,7 +9,6 @@ output:
      toc: true
      toc_depth: 2
      number_sections: true
-     css: mycayman.min.css
    pdf_document:
      toc: yes
      toc_depth: '2'
@@ -1315,12 +1314,10 @@ testData = testing(TT)
 
 A logistic regression can be seen as a generalisation of the linear regression model. It is a linear regression model in the *log odds*. When you plot a binairy target against an input variable, it is often hard to see a relation. Use a smoothing plot.
 
-```{r}
+```{r, eval=FALSE}
 library(ggplot2)
 ggplot(trainData, aes(x=exposure,y=clm)) + geom_point()
-
 ggplot(trainData, aes(x=exposure,y=clm)) + geom_smooth()
-
 ```
 
 
