@@ -1438,7 +1438,26 @@ testData = testData %>% mutate(
 ```
 
 
-lift curves op 10%
+lift percentage op 10%
+
+```{r}
+testData = testData %>% 
+  mutate(
+    perc = cut(
+      glm_prediction, 
+      breaks = quantile(
+        glm_prediction, 
+        probs = (0:10)/10
+      )
+    )
+  )
+
+## if you know nothing :-)
+testData %>%  summarise(target = mean(clm))
+
+## if you have a score!!!
+testData %>% group_by(perc) %>%  summarise(target = mean(clm))
+```
 
 
 Area under roc
