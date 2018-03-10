@@ -1308,7 +1308,7 @@ library(visNetwork)
 library(h2o)
 library(rsample)
 library(dplyr)
-
+library(pROC)
 data("dataCar")
 ```
 
@@ -1442,7 +1442,7 @@ testData = testData %>% mutate(
 
 percentage op 10%
 
-```{r}
+```{r, eval=FALSE}
 testData = testData %>% 
   mutate(
     perc = cut(
@@ -1464,12 +1464,16 @@ testData %>% group_by(perc) %>%  summarise(target = mean(clm))
 
 ### Receiver Operating Characteristic (ROC) Curve
 
-For our claims model we have a predict claim score/probability. Now, if we choose a treshold, say 0.50 and predict: a person will claims if his score is larger than 0.5 and will not claim if his score is smaller than 0.5, we can see on our test data set true positives and false positives. The ROC curve is then created by plotting the true positive rate (TPR) against the false positive rate (FPR) at various threshold values.
+For our claims model we have a predict claim score/probability. Now, if we choose a treshold, say 0.50 and predict: a person will claims if his score is larger than 0.5 and will not claim if his score is smaller than 0.5, we can see on our test data set true positives and false positives. The ROC curve is then created by plotting the true positive rate (TPR, or also called sensitivity) against the false positive rate (FPR, also known as specificity) at various threshold values.
 
 We can use the pROC package in R to create such curves
 
-```{r}
-library(pROC)
+```{r, eval=FALSE}
+rocGLMclaims = roc(clm  ~ glm_prediction,  data = testData )
+rocTREEclaims = roc(clm  ~ tree_prediction,  data = testData )
+
+plot(rocGLMclaims)
+plot(rocTREEclaims, col=2, add=TRUE)
 ```
 
 ```{r, eval = FALSE}
