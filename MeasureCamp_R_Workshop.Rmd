@@ -26,10 +26,14 @@ output:
 
 <br>
 
+! WARNING !  **This document will contain more material than I can handle during the 3 hour workshop. **
+
+<br>
 
 # The RStudio Environment
 
 ---
+
 
 Start with powerpoint slides over R followed by an intro in RStudio:
 
@@ -1309,15 +1313,17 @@ library(h2o)
 library(rsample)
 library(dplyr)
 library(pROC)
+library(lime)
+
 data("dataCar")
 ```
 
 The target should be a factor variable when doing classification
 
-```{r}
+```{r, eval = FALSE}
 dataCar = dataCar %>%
   mutate(
-    Target = as.factor(clm)
+    Target = as.factor( ifelse( clm < 1, "N", "Y"))
   )
 
 table(dataCar$Target)
@@ -1365,13 +1371,14 @@ A decision tree is a recursive partioning of the data. High over, it splits data
 
 ```{r, eval=FALSE}
 cars_tree = rpart(Target ~ . -numclaims - claimcst0 - clm, data = trainData)
+
 plot(cars_tree)
 text(cars_tree)
 
 cars_tree = rpart(
   Target ~ . -numclaims - claimcst0 - clm, 
   data = trainData,
-  control = rpart.control(cp = 0.00015)
+  control = rpart.control(cp = 0.00010)
 )
 
 visTree(
@@ -1385,11 +1392,11 @@ visTree(
 
 ### Random forest and Boosted trees
 
-A single decision tree is a nice interpretable model, but often the predictive power is not good, the model might be too simple. The last say, 8 years, Random Forests and boosted trees, became very popular. They are so called ensemble methods, a collection of multiple trees. 
+A single decision tree is a nice interpretable model, but often the predictive power is not good, the model might be too simple. The last say, 8 years, random forests and boosted trees, became very popular. They are so called ensemble methods, a collection of multiple trees. 
 
-The package h2o has a good implementation of Random Forests and boosted trees. This library has its own execution engine, data need to be transfererd from R to h2o.
+The package `h2o` has a good implementation of Random Forests and boosted trees. This library has its own execution engine, data need to be transfererd from R to h2o.
 
-```{r}
+```{r, eval = FALSE}
 library(h2o)
 h2o.init()
 
@@ -1400,11 +1407,12 @@ inputvars = allvars[ ! allvars %in% exclude_vars]
 trainh2o = as.h2o(trainData)
 testh2o = as.h2o(testData)
 
-trees = h2o.gbm(
+tree_ensemble = h2o.gbm(
   x= inputvars,
   y= "Target",
   training_frame = trainh2o ,
-  validation_frame = testh2o
+  validation_frame = testh2o,
+  ntrees = 150
 )
 ```
 
@@ -1415,7 +1423,7 @@ A nice output of tree based methods are the variable importance statistics. If a
 
 ```{r, eval=FALSE}
 cars_tree$variable.importance
-h2o.varimp_plot(trees)
+h2o.varimp_plot(tree_ensemble)
 ```
 
 
@@ -1423,42 +1431,88 @@ h2o.varimp_plot(trees)
 
 We have used only a part of all claims to train the model. Now we use the other part, the test set to evaluate the model. We use the model to predict for each each person in the test set the propability that he/she will claim. We know the actual result so hopefully people with high predicted probability are the ones who actualy claimed.
 
-```{r}
+There is a generic `predict` function that you can use, it takes a model object and a data set for which you want to calculate predictions, and possibly other parameters.
 
-## linear model
+```{r, eval = FALSE}
+## logistic regression model
+
+### example call
+predict(cars_glm, newdata = testData, type = "response")
+
+### put the predictions inside the testData data frame
 testData = testData %>% mutate(
   glm_prediction = predict(cars_glm, newdata = testData, type = "response")
 )
+```
 
+For a decision tree the output of predict is slightly different.
+
+```{r, eval = FALSE}
 ## decision tree
+
+### example call
+predict(cars_tree, newdata = testData)
+
+### put the predictions inside the testData data frame
 testData = testData %>% mutate(
   tree_prediction = predict(cars_tree, newdata = testData)[,2]
 )
-
 ```
 
 
-### lift percentages
+The gbm model in h2o is slightly more tricky, the following statement predicts
+on the data in h2o, if we want to use it in R we need to bring it to R 
 
-percentage op 10%
+```{r, eval=FALSE}
+predict(tree_ensemble, testh2o)
+
+## bring h2o predictions to R, and directly in the testData data frame
+testData = testData %>% mutate(
+  ensemble_prediction = predict(
+    tree_ensemble, testh2o) %>% 
+    as.data.frame() %>%
+    .[,3]
+)
+```
+
+
+### Lift percentages
+
+If we do not use a model, we can calculate the overall claim percentage
+
+```{r, eval=FALSE}
+## if you know nothing :-)
+testData %>%  summarise(target = mean(clm))
+```
+
+If we have a good model, we would be able to use the model scores to identify a (small) group of people who have a (much) higher claim percentage. Let's look at the highest 10% model scores.
 
 ```{r, eval=FALSE}
 testData = testData %>% 
   mutate(
-    perc = cut(
+    percGLM = cut(
       glm_prediction, 
       breaks = quantile(
         glm_prediction, 
         probs = (0:10)/10
       )
+    ),
+    percENSEMBLE = cut(
+      ensemble_prediction, 
+      breaks = quantile(
+        ensemble_prediction, 
+        probs = (0:10)/10
+      )
     )
   )
 
-## if you know nothing :-)
-testData %>%  summarise(target = mean(clm))
+
+hist(testData$ensemble_prediction, nclass = 25)
+hist(testData$glm_prediction, nclass = 25)
 
 ## if you have a score!!!
-testData %>% group_by(perc) %>%  summarise(target = mean(clm))
+testData %>% group_by(percGLM) %>%  summarise(target = mean(clm))
+testData %>% group_by(percENSEMBLE) %>%  summarise(target = mean(clm))
 ```
 
 
@@ -1482,6 +1536,38 @@ testData %>% roc_auc(Target, tree_prediction)
 
 ```
 
+
+### Explain the model, please?
+
+When training random forest or boosting models, it is often hard to explain the model. I.e. why will the model predict for person X a high claim probablity and why does it predict for person Z a low claim probability?
+
+
+The package `lime` can shed some insights into a model decision algorithm. It does this by looking at the top predictor variables and plot their effect on the model prediction.
+
+```{r, eval = FALSE}
+## Given the training data and the model to explain, create ann explainer
+explainer = lime(
+  trainData,
+  tree_ensemble
+)
+
+## now we can explain specific cases
+# Let's take two cases with high exposure and low exposure
+explain_cases = bind_rows( 
+  trainData %>% filter(exposure > 0.6) %>% slice(1:3),
+  trainData %>% filter(exposure < 0.1) %>% slice(1:3)
+)
+
+# explain the 6 cases in terms of the top 5 features
+explanation <- lime::explain(
+  explain_cases,
+  explainer, 
+  n_labels = 2,
+  n_features = 5
+)
+
+plot_features(explanation)
+```
 
 
 
