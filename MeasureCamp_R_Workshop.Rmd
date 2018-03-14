@@ -514,8 +514,15 @@ x4
 class(x4)
 class(df1$type)
 
-mydf = data.frame(kolomnaampj1 = x1, income = x2, age=x3, type = x4, stringsAsFactors = FALSE)
+mydf = data.frame(
+  kolomnaampj1 = x1, 
+  income = x2, 
+  age = x3,
+  type = x4,
+  stringsAsFactors = FALSE
+)
 mydf
+
 class(mydf$type)
 
 ## Dit is ook in de Environment viewer te zien
@@ -649,14 +656,14 @@ my.cars = mtcars %>% .[2:6]
 
 ### create columns with `mutate`
 
-We zagen al dat je kolommen in een data frame kon maken of wijzigen met `$` 
+We already saw that you could add extra columns to a data frame with the `$` operator 
 
 ```{r, eval=FALSE}
 my.cars$kolom2  = rnorm(32)
 my.cars$kolom3  = my.cars$kolom2 + 9
 ```
 
-Maar met `mutate` kan je dit veel eleganter doen
+With the function`mutate` you can do this as well.
 
 ```{r, eval=FALSE}
 mycars = mtcars %>%
@@ -670,7 +677,8 @@ mycars = mtcars %>%
   )
 ```
 
-Je kan nieuwe kolommen maken die afhankelijk zijn van kolommen die je net in mutate maakt
+
+You can create new columns that depend on columns that you just create in mutate.
 
 ```{r, eval=FALSE}
 mycars = mtcars %>%
@@ -684,7 +692,7 @@ mycars = mtcars %>%
 
 ### create `distinct` rows
 
-Soms wil je data ontdubbelen, dit kan je in R doen met de functie `distinct`
+To de-duplicate data in a data set, use the function `distinct`.
 
 ```{r, eval=FALSE}
 distinct( select(mtcars, carb, gear))
