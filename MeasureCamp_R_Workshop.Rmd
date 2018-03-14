@@ -604,20 +604,18 @@ For more details on connectring R rto a database see [this website](https://db.r
 
 ---
 
-# Data preparation and Manipulation
+# Data preparation and manipulation
 
 ---
 
-## De dplyr library
+## The dplyr library
 
 ---
 
-Dit package / library is ontzettend handig om data te bewerken in R. De syntax is elegant en dplyr code kan je in sommige gevallen ook gebruiken voor data die niet in R zit. Bijvoorbeeld, data in Spark kan je met dplyr code bewerken. Er zijn veel 'sleutel' woorden, maar de belangrijkste zijn `select`,  `filter`, `mutate`, `arrange`, `summarize`, `slice` en `rename`. 
-
-Het mooie is dat deze sleutel woorden ook achter elkaar gebruikt kunnen worden met de `%>%` chain operator. We gebruiken als voorbeeld data uit de datasets library. `mtcars` is een klein data set met wat auto gegevens en `iris` is de bekende data set met drie soorten bloemen.
+This library is very useful to prepare data in R. The syntax is elegant and dplyr code can also be used for data that is not in R. For example, data in Spark can be edited with dplyr code. There are many "key" functions, but the most important ones are `select`,` filter`, `mutate`,` arrange`, `summarize`,` slice` and `rename`. The nice thing about these functions is that they can be used with the `%>%` chain operator. 
 
 
-### kolommen selecteren met select
+### seleceting columns with `select`
 
 ```{r, eval=FALSE}
 ## enkele kolommen selecteren
@@ -647,7 +645,7 @@ test2 = mtcars %>%
 my.cars = mtcars %>% .[2:6]
 ```
 
-### kolom maken of wijzigen met mutate
+### create columns with `mutate`
 
 We zagen al dat je kolommen in een data frame kon maken of wijzigen met `$` 
 
@@ -682,7 +680,7 @@ mycars = mtcars %>%
 ```
 
 
-### distinct rows
+### create `distinct` rows
 
 Soms wil je data ontdubbelen, dit kan je in R doen met de functie `distinct`
 
@@ -698,7 +696,7 @@ myset = mtcars %>%
 ```
 
 
-### data sets filteren
+### selecting rows from data with `filter`
 
 Met `filter` en `slice` kan je rijen uit een data frame halen. 
 
@@ -731,7 +729,7 @@ slice(mtcars, 1:8)
 slice(mtcars, 8:n())
 ```
 
-### data sets aggregeren
+### Aggregating data sets 
 
 Aggregeren met de functie `group_by` en `summarise` deze gaan vaak hand in hand samen.
 
@@ -769,7 +767,7 @@ out = filter(
 ```
 
 
-### data sets joins
+### Joining data sets
 
 Met dplyr kun je makkelijk tabellen joinen. Er zijn verschillende joins die ondersteunt worden. We geven hier een aantal voorbeelden.
 
@@ -817,7 +815,7 @@ full_join(df1, df2, by = c("col1" = "col1"))
 
 <br>
 
-## Data frames stapelen of plakken
+## stack or bind data sets
 
 Soms wil je twee tabellen op elkaar stappelen tot een nieuwe tabel, dat kan je doen met `bind_rows`. Als je twee tabellen naast elkaar wilt zetten tot een nieuwe tabel, gebruik dan `bind_rows`.
 
@@ -846,7 +844,7 @@ bind_cols(A,B)
 
 <br>
 
-## Tidy data en wide data
+## Tidy data and wide data
 
 ---
 
@@ -912,7 +910,7 @@ df %>% separate(x, c("Kol1", "Kol2", "Kol3"))
 <br>
 
 
-## Character data bewerken met stringr
+## Manipulating character data with `stringr`
 
 ---
 
@@ -1040,7 +1038,7 @@ MeetData = MeetData %>%
 ```
 
 
-### durations en intervals
+### durations and intervals
 
 Als je in R twee datums/times van elkaar aftrekt krijg je in R een duration 
 
@@ -1094,6 +1092,8 @@ testdata
 ```
 
 
+
+
 # Data visualisation
 
 ---
@@ -1107,6 +1107,8 @@ testdata
 ## visnetwork
 
 restaurant edges
+
+
 
 
 # Machine learning
@@ -1533,7 +1535,6 @@ plot(rocTREEclaims, col=2, add=TRUE)
 ```{r, eval = FALSE}
 testData %>% roc_auc(Target, prediction)
 testData %>% roc_auc(Target, tree_prediction)
-
 ```
 
 
