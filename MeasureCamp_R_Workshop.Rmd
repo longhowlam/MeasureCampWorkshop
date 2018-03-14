@@ -708,7 +708,7 @@ myset = mtcars %>%
 
 ### selecting rows from data with `filter`
 
-Met `filter` en `slice` kan je rijen uit een data frame halen. 
+With the functions `filter` and `slice` you can select records / rows from a data frame. 
 
 ```{r, eval=FALSE, include=FALSE}
 filter(
@@ -732,7 +732,7 @@ filter(
 )
 ```
 
-Met `slice` kan je op basis van row numbers data selecteren. Als voorbeeld, de eerste 8 records, of record 8 tot en met de laatste record.
+With `slice` you can take rows based on row numbers from a data set. For example the first 8 records, or record 8 until the last one.
 
 ```{r, eval=FALSE}
 slice(mtcars, 1:8)
@@ -741,7 +741,7 @@ slice(mtcars, 8:n())
 
 ### Aggregating data sets 
 
-Aggregeren met de functie `group_by` en `summarise` deze gaan vaak hand in hand samen.
+The functions `group_by` and `summarise` are often used together to aggrgeate data.
 
 ```{r, eval=FALSE}
 ## apart aanroep van group_by en summarise... zo kan je zien wat group_by oplevert
@@ -761,7 +761,6 @@ out = mtcars %>%
     mhp = mean(hp)
   )
 
-
 out = filter(
   mtcars, mpg > 11
   ) %>%
@@ -776,10 +775,38 @@ out = filter(
   )
 ```
 
+### window functions
+
+dplyr supports so-called SQL window functions. For example, determine per cyl value the ranking of hp.
+
+```{r, eval = FALSE}
+ TMP = mtcars %>%
+  group_by(
+    cyl
+  ) %>%
+  mutate(
+    rank = rank(desc(hp), ties.method = "first")
+  ) %>%
+  select(cyl, hp, rank)
+```
+
+Now per cyl value, we can select the car with largest hp value.
+
+```{r}
+TMP = mtcars %>%
+  group_by(
+    cyl
+  ) %>%
+  mutate(
+    rank = rank(desc(hp), ties.method = "first")
+  ) %>%
+  filter(rank ==1)
+```
+
 
 ### Joining data sets
 
-Met dplyr kun je makkelijk tabellen joinen. Er zijn verschillende joins die ondersteunt worden. We geven hier een aantal voorbeelden.
+With dplyr you can easily join data frames. There are several joins that are supported. We give a number of examples here.
 
 
 ```{r, eval=FALSE}
@@ -827,7 +854,7 @@ full_join(df1, df2, by = c("col1" = "col1"))
 
 ## stack or bind data sets
 
-Soms wil je twee tabellen op elkaar stappelen tot een nieuwe tabel, dat kan je doen met `bind_rows`. Als je twee tabellen naast elkaar wilt zetten tot een nieuwe tabel, gebruik dan `bind_rows`.
+Sometimes you want to stack two tables on top of each other into a new table, you can do that with `bind_rows`. If you want to put two tables next to each other into a new table, use `bind_cols`.
 
 ```{r, eval=FALSE}
 ## bind_rows
@@ -840,6 +867,8 @@ E = data.frame(x=21:25, y = rnorm(5), z = rnorm(5))
 
 bind_rows(A,E)
 ```
+
+two data sets next to each other
 
 ```{r, eval=FALSE}
 A = data.frame(x=1:5, y = rnorm(5))
@@ -858,13 +887,13 @@ bind_cols(A,B)
 
 ---
 
-Tidy data is wanneer data in de volgende vorm zit:
+Tidy data is data in the following form:
 
-* Elke variabele is in een kolom.
-* Elke observatie is een rij.
-* Elke waarde is een cel.
+* Each variable is a column.
+* Each observation is a row.
+* Each value is a cel.
 
-Stel we hebben de volgende data set
+Suppose we have the following data:
 
 ```{r, eval=FALSE}
 library(tidyr)
@@ -877,7 +906,7 @@ stocks <- data.frame(
 stocks
 ```
 
-Soms is het handig om data waarden in 1 kolom te hebben en een aparte variabele die de variabele weergeeft
+Sometimes it is useful to have data values in one column and a separate column that represents the corresponding variable.
 
 ```{r, eval=FALSE}
 stocksm <- stocks %>% gather(stock, price, -time)
