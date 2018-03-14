@@ -546,15 +546,15 @@ df1
 
 ## Import functions
 
-Als je met R werkt heb je natuurlijk data nodig, zoals we op bovenstaande manier data hebben gemaakt zal het in de praktijk niet gebeuren met echte data sets. Die leven in data bases of in files
+If want to analyze data in R, you obviously need data. Until now we have created our data manualy with code. In real life you have already data in files or databases.
 
-Er zijn een aantal packages die handig zijn om files in te lezen.
+There are a number of packages that are useful for reading files.
 
-* `readr` package, voor tekst files
-* `haven` package voor files van SAS, SPSS, Stata
-* `readxl` voor Excel files
+* `readr` package, for text files
+* `haven` package for files from SAS, SPSS, Stata
+* `readxl` for Excel files
 
-R heeft ook standaard functies voor het inzegen van text files, maar ik gebruik vaak de functies uit het package `readr`. Voor grote files is het veel sneller. En je ziet dan ook een progress bar. In RStudio, kan je de import functies ook aanroepen via de ** Import Dataset ** GUI die het inlezen van data begeleidt.
+Base R also has standard functions for importing text files, but I often use the functions from the `readr` package. It is much faster for larger files, and you will also see a progress bar. In RStudio, you can also call the import functions via the ** Import Dataset ** GUI which guides you through the process of importing data.
 
 
 ```{r, eval=FALSE}
@@ -572,10 +572,12 @@ test = read_excel(
 
 ## RDS files
 
-Je kan R objecten (niet alleen data frames) weg schrijven met de `saveRDS` functie, en deze kunnen weer ingelezen worden met de `readRDS` functie. files die je krijgt zijn binaire bestanden, ze kleiner dan tekst files en zijn sneller om weer in R in te lezen.
+You can save R objects (not only data frames) with the `saveRDS` function, and these can be imported back into R again with the` readRDS` function. The files that `saveRDS` creates are binary files, they are smaller than text files and are faster to read in R again.
+
 
 ```{r, eval = FALSE}
-
+x = rnorm(100)
+saveRDS(x, "x.RDs")
 ```
 
 ## Database connection
