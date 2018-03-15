@@ -59,7 +59,7 @@ In an R script you type code and if you move the cursor on a line you can run th
 
 ## R Notebooks / R Markdown files
 
-R notebooks and R Markdown files contain more than just R code, it is a 'complete' document with R code, output and a descriptive storyline. In an R project you can also manage several of these notebooks (or markdown files) and scripts. Note books are created with Rmarkdown, a sort of light weight markup language in which you can specify headers, figures and bold prints, for example. This R course is written in an R markdown file. A notebook / markdown file contains ** R code chunks ** that you can run.
+R notebooks and R Markdown files contain more than just R code, it is a 'complete' document with R code, output and a descriptive story line. In an R project you can also manage several of these notebooks (or markdown files) and scripts. Note books are created with R markdown, a sort of light weight markup language in which you can specify headers, figures and bold prints, for example. This R course is written in an R markdown file. A notebook / markdown file contains ** R code chunks ** that you can run.
 
 
 If you press the 'Preview' button above the R notebook you will see a separate window with the **result of the R notebook**. Therefore, RStudio creates a separate file that has the name `<file_name>.nb.html`. This is a html file that you can share with others.
@@ -79,7 +79,7 @@ Git is a version control system. In RStudio you can easily use git. You will hav
 
 ## A few simple R expressions to get started
 
-In the code chucnk below you'll find some simple R expressions to get started.
+In the code chunk below you'll find some simple R expressions to get started.
 
 ```{r, eval=FALSE}
 1 + 1
@@ -553,7 +553,7 @@ df1
 
 ## Import functions
 
-If want to analyze data in R, you obviously need data. Until now we have created our data manualy with code. In real life you have already data in files or databases.
+If want to analyze data in R, you obviously need data. Until now we have created our data manually with code. In real life you have already data in files or databases.
 
 There are a number of packages that are useful for reading files.
 
@@ -605,11 +605,11 @@ cars = tbl(con_sql, "mtcars")
 ```
 
 
-In the RStudio GUI you can see (only for certain connectiions) the data tables in the data base server.
+In the RStudio GUI you can see (only for certain connections) the data tables in the data base server.
 
 ![](connections.PNG)
 
-For more details on connectring R rto a database see [this website](https://db.rstudio.com/overview).
+For more details on connecting R to a database see [this website](https://db.rstudio.com/overview).
 
 ---
 
@@ -624,7 +624,7 @@ For more details on connectring R rto a database see [this website](https://db.r
 This library is very useful to prepare data in R. The syntax is elegant and dplyr code can also be used for data that is not in R. For example, data in Spark can be edited with dplyr code. There are many "key" functions, but the most important ones are `select`,` filter`, `mutate`,` arrange`, `summarize`,` slice` and `rename`. The nice thing about these functions is that they can be used with the `%>%` chain operator. 
 
 
-### seleceting columns with `select`
+### Seleceting columns with `select`
 
 ```{r, eval=FALSE}
 ## enkele kolommen selecteren
@@ -654,7 +654,7 @@ test2 = mtcars %>%
 my.cars = mtcars %>% .[2:6]
 ```
 
-### create columns with `mutate`
+### Create columns with `mutate`
 
 We already saw that you could add extra columns to a data frame with the `$` operator 
 
@@ -690,7 +690,7 @@ mycars = mtcars %>%
 ```
 
 
-### create `distinct` rows
+### Create `distinct` rows
 
 To de-duplicate data in a data set, use the function `distinct`.
 
@@ -706,7 +706,7 @@ myset = mtcars %>%
 ```
 
 
-### selecting rows from data with `filter`
+### Selecting rows from data with `filter`
 
 With the functions `filter` and `slice` you can select records / rows from a data frame. 
 
@@ -741,7 +741,7 @@ slice(mtcars, 8:n())
 
 ### Aggregating data sets 
 
-The functions `group_by` and `summarise` are often used together to aggrgeate data.
+The functions `group_by` and `summarise` are often used together to aggregate data.
 
 ```{r, eval=FALSE}
 ## apart aanroep van group_by en summarise... zo kan je zien wat group_by oplevert
@@ -775,7 +775,7 @@ out = filter(
   )
 ```
 
-### window functions
+### Window functions
 
 dplyr supports so-called SQL window functions. For example, determine per cyl value the ranking of hp.
 
@@ -792,7 +792,7 @@ dplyr supports so-called SQL window functions. For example, determine per cyl va
 
 Now per cyl value, we can select the car with largest hp value.
 
-```{r}
+```{r, eval = FALSE}
 TMP = mtcars %>%
   group_by(
     cyl
@@ -852,7 +852,7 @@ full_join(df1, df2, by = c("col1" = "col1"))
 
 <br>
 
-## stack or bind data sets
+## Stack or bind data sets
 
 Sometimes you want to stack two tables on top of each other into a new table, you can do that with `bind_rows`. If you want to put two tables next to each other into a new table, use `bind_cols`.
 
@@ -891,7 +891,7 @@ Tidy data is data in the following form:
 
 * Each variable is a column.
 * Each observation is a row.
-* Each value is a cel.
+* Each value is a cell.
 
 Suppose we have the following data:
 
@@ -913,7 +913,7 @@ stocksm <- stocks %>% gather(stock, price, -time)
 stocksm
 ```
 
-en spread is het omgekeerde proces
+And with the function `spread` you can reverse the process.
 
 ```{r, eval=FALSE}
 stock2 = stocksm %>% spread(stock, price)
@@ -931,7 +931,7 @@ test2 = test %>% spread(V,price)
 test2
 ```
 
-Een handige functie in tidyr is `separate`, dit kan je gebruiken om een kolom uit elkaar te trekken. Standaard worden niet alpha numerieke tekens als separator gebruikt.
+A useful function in tidyr is `separate`, you can use this to separate data that is in one column. By default, non alpha-numeric characters are not used as separators.
 
 ```{r, eval=FALSE}
 df = tibble(x = c("A.B", "C.P", "P.Q"))
@@ -953,18 +953,19 @@ df %>% separate(x, c("Kol1", "Kol2", "Kol3"))
 
 ---
 
-Character data in R kan je bewerken/manipuleren met het `stringr` package. Voordat we daar verder op in gaan is het handig om te weten wat reguliere expressies zijn.
+Character data (strings) in R can be manipulated with the `stringr` package. Before we go further, it is useful to know what regular expressions are.
 
-### Reguliere expressies
+### Regular expressions
 
-Dit is een soort 'mini' taaltje om character patronen te specificeren om er vervolgens bijvoorbeeld op te zoeken. Eerst wat dummy character data.
+Regular expressions are a sort of 'mini' language to specify character patterns, so that you can search on those patterns in texts. First create some dummy character data.
+
 
 ```{r, eval=FALSE}
 test = c("Mijn nummer is 06-12345678", "dit is .. een 1628EP postcode test", "foutje?:  0234XD", "dit is er nog een 1628 EP", "en nog een foute 126EP", "nog een 1234    XX", "1234eZ en nog 4567PK", "12345 Aabcde", "&yfy.")
 test
 ```
 
-Een paar voorbeelden van reguliere expressies.
+A few examples of regular expressions.
 
 ```{r, eval=FALSE}
 library(stringr)
@@ -994,21 +995,15 @@ patroon = "[[:punct:]]"
 str_extract(test, patroon)
 ```
 
-Sommige mensen zijn de wildcard notatie gewend om te zoeken in strings, deze wildcard notatie kan je vertalen naar reguliere expressies met `glob2rx`. Een paar voorbeelden zullen hieronder geven. 
 
-```{r, eval=FALSE}
-patroon = glob2rx("*23*")
-str_extract(test, patroon)
-```
-
-Voor een cheatsheet over reguliere expressies zie [regex cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
+A nice cheat sheet on regular expressions can be found here: [regex cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
 
 
 ## Dates and times in R
 
 ---
+To work with dates (and times) in R, the packages `anytime` and` lubridate` are very useful. Let's assume that we have characters with dates and want to use them in calculations. Then we can use the `anydate` function from the anytime package or one of the `ymd` functions.
 
-Voor datums (en tijden) in R zijn de packages `anytime` en `lubridate` heel handig. Laten we er van uitgaan dat we characters hebben met datums en daar mee willen rekenen. Dan kunnen we de functie `anydate` uit het anytime package gebruiken of een van de `ymd` functies.
 
 ```{r, eval=FALSE}
 library(lubridate)
@@ -1025,7 +1020,7 @@ testdata = testdata %>%
   )
 ```
 
-De functie `anydate` parsed diverse character notatie naar een date kolom, de gaat meestal goed :-)
+The function `anydate` parses various character notations to a date value, this usually goes as OK :-)
 
 ```{r, eval=FALSE}
 y = c("1973/09/12", "05/23/1980", "23/05/1980","1981-12-09")
@@ -1038,7 +1033,7 @@ testdata = testdata %>%
   )
 ```
 
-Nu we een datum echt als date column in een data frame of tibble hebben kunnen we er mee rekenen.
+Now that we have a date as a date column in a data frame or tibble, we use it in calculations.
 
 ```{r, eval=FALSE}
 testdata = testdata %>%
@@ -1049,87 +1044,19 @@ testdata = testdata %>%
   )
 ```
 
-*UNIX time stamps*....  Wat zeg je?
-
-Een Unix time stamps is het aantal seconden sinds 1-1-1970. Mocht je dit ooit tegen komen dan kan anytime er ook mee uit de voeten.
-
-```{r, eval=FALSE}
-tmp = read_csv("data/unixtimestamps.csv")
-tmp$datum = anydate(tmp$timestamp)
-tmp
-```
-
-
-Tijdstippen kunnen in R ook worden weergegven met times
-
+Time can also be represented in R
 
 ```{r, eval=FALSE}
 tmp = paste("2018-01-23", c("12:01:33", "12:01:38", "12:01:58"))
 Waarde = c(2.4, 5.6, 7.8)
 
-MeetData = tibble(tmp = tmp, Waarde= Waarde)
+MeetData = tibble(tmp = tmp, Waarde = Waarde)
 
 MeetData = MeetData %>% 
   mutate(
     Meettijdstip = ymd_hms(tmp)
   )
-
 ```
-
-
-### durations and intervals
-
-Als je in R twee datums/times van elkaar aftrekt krijg je in R een duration 
-
-```{r, eval=FALSE}
-MeetData = MeetData %>% 
-  mutate(
-    duur = ymd_hms("2018-02-01 00:00:00") - ymd_hms(tmp)
-  )
-
-```
-
-Ja kan durations ook zelf maken en optellen bij een datum
-
-```{r, eval=FALSE}
-testduur = dweeks(3)
-testduur = dweeks(3.1)
-class(testduur)
-
-MeetData = MeetData %>% 
-  mutate(
-   t2 = Meettijdstip + dyears(2),
-   t3 = Meettijdstip + dseconds(1800),
-   t4 = Meettijdstip + dweeks(3)
-   
-  )
-
-```
-
-
-In R heb je ook zogenaamde `interval` objecten, dit is de tijdsperiode tussen een start en eind datum. Hiermee kan je de leeftijd in jaren ook precies uitrekenen.
-
-```{r, eval=FALSE}
-
-y = c("1973-09-12", "1973-01-09")
-
-testdata = tibble(DoB = y)
-
-testdata = testdata %>%
-  mutate(
-    GeboorteDatum = anydate(DoB),
-    interval1 = interval(GeboorteDatum, today()),
-    interval2 = GeboorteDatum %--% today(),
-    leeftijd = interval1 %/% years(1)
-  )
-
-testdata
-
-# NB %/% is de integer division in R
-13 / 6
-13 %/% 6
-```
-
 
 
 
@@ -1154,15 +1081,15 @@ restaurant edges
 
 ---
 
-In R you can create different machine learning models, in this script I wlll demo supervised machine learning:
+In R you can create different machine learning models, in this script I will demo supervised machine learning:
 
 * regression, with lm
 * classification, with glm, rpart and h2o
 
-In supervised learning you are predicting an observed 'Target', observed 'behaviour' from data. When this target is binary we have a classifiaction problem. For example we observed whether or not customers responded to a mailing, whether or not a customer had a car accident. When this target is numeric we have a regression problem. 
+In supervised learning you are predicting an observed 'Target', observed 'behavior' from data. When this target is binary we have a classification problem. For example we observed whether or not customers responded to a mailing, whether or not a customer had a car accident. When this target is numeric we have a regression problem. 
 
 
-I'll also show market basket analaysis with the package `arules`. A technique to o analyse transactional data. For example physical purchases in suprmarket or web clicks on a site.
+I'll also show market basket analysis with the package `arules`. A technique to o analyse transactional data. For example physical purchases in supermarket or web clicks on a site.
 
 
 ## Lineare regressie 
@@ -1249,9 +1176,7 @@ m4 = lm(f4, data = jaap)
 summary(m4)
 ```
 
-
-Als je verschillende model objecten hebt gemaakt kan je de functie `anova` gebruiken om ze met elkaar te vergelijken. Dit gebeurt met behulp van F statistics. De modellen moeten wel oplopend in complexiteit zijn.
-
+If you have created different model objects, you can use the `anova` function to compare them. This is done with the help of F statistics. The models must be increasingly more complex.
 
 ```{r, eval =FALSE}
 anova(m0, m1, m2, m3, m4)
@@ -1272,9 +1197,9 @@ summary(m6)
 ```
 
 
-### Buckets / linear constant  en splines 
+### Buckets / linear constant  and splines 
 
-Als een input variable niet linear is m.b.t. de target kan je deze niet lineariteit modelleren met buckets (linear constante stukken) of met splines.
+If an input variable is not linear with respect to the target, you can not model it linearly with buckets (linear constant parts) or with splines.
 
 ```{r, eval = FALSE}
 library(ggplot2)
@@ -1297,10 +1222,9 @@ summary(m3)
 
 ```
 
-###  predicties
+###  Predictions
 
-Met de functie `predict` kunnen we nieuwe huizen scoren, dat wil zeggen de prijs van andere huizen die niet in de training data set zaten voorspellen.
-
+With the `predict` function we can now score any house for which you want to determine a price, i.e. predict the price of houses that were not our training data set.
 
 ```{r, eval=FALSE}
 NieuweHuizen = data.frame(
@@ -1382,7 +1306,7 @@ testData = testing(TT)
 
 ### Logistic regression
 
-A logistic regression can be seen as a generalisation of the linear regression model. It is a linear regression model in the *log odds*. When you plot a binairy target against an input variable, it is often hard to see a relation. Use a smoothing plot.
+A logistic regression can be seen as a generalization of the linear regression model. It is a linear regression model in the *log odds*. When you plot a binary target against an input variable, it is often hard to see a relation. Use a smoothing plot.
 
 ```{r, eval=FALSE}
 library(ggplot2)
@@ -1403,12 +1327,12 @@ cars_glm = glm(
 summary(cars_glm)
 ```
 
-Interpretation of the coefficient $c$ for a variable $x$ is as follows. One unit increase in the variable $x$ means $\exp(c)$ more likely that you will claim. So positive coefficient values mean increase of claim probability when $x$ increases, and negative values mean a decrease of claim probaility when $x$ increases.
+Interpretation of the coefficient $c$ for a variable $x$ is as follows. One unit increase in the variable $x$ means $\exp(c)$ more likely that you will claim. So positive coefficient values mean increase of claim probability when $x$ increases, and negative values mean a decrease of claim probability when $x$ increases.
 
 
 ### Decision tree
 
-A decision tree is a recursive partioning of the data. High over, it splits data into two parts based so that the mean target values in the two pieces differ the most. 
+A decision tree is a recursive partitioning of the data. High over, it splits data into two parts based so that the mean target values in the two pieces differ the most. 
 
 ```{r, eval=FALSE}
 cars_tree = rpart(Target ~ . -numclaims - claimcst0 - clm, data = trainData)
@@ -1435,7 +1359,7 @@ visTree(
 
 A single decision tree is a nice interpretable model, but often the predictive power is not good, the model might be too simple. The last say, 8 years, random forests and boosted trees, became very popular. They are so called ensemble methods, a collection of multiple trees. 
 
-The package `h2o` has a good implementation of Random Forests and boosted trees. This library has its own execution engine, data need to be transfererd from R to h2o.
+The package `h2o` has a good implementation of Random Forests and boosted trees. This library has its own execution engine, data need to be transferred from R to h2o.
 
 ```{r, eval = FALSE}
 library(h2o)
@@ -1470,7 +1394,7 @@ h2o.varimp_plot(tree_ensemble)
 
 ## How good is the model?
 
-We have used only a part of all claims to train the model. Now we use the other part, the test set to evaluate the model. We use the model to predict for each each person in the test set the propability that he/she will claim. We know the actual result so hopefully people with high predicted probability are the ones who actualy claimed.
+We have used only a part of all claims to train the model. Now we use the other part, the test set to evaluate the model. We use the model to predict for each each person in the test set the probability that he/she will claim. We know the actual result so hopefully people with high predicted probability are the ones who actually claimed.
 
 There is a generic `predict` function that you can use, it takes a model object and a data set for which you want to calculate predictions, and possibly other parameters.
 
@@ -1559,9 +1483,9 @@ testData %>% group_by(percENSEMBLE) %>%  summarise(target = mean(clm))
 
 ### Receiver Operating Characteristic (ROC) Curve
 
-For our claims model we have a predict claim score/probability. Now, if we choose a treshold, say 0.50 and predict: a person will claims if his score is larger than 0.5 and will not claim if his score is smaller than 0.5, we can see on our test data set true positives and false positives. The ROC curve is then created by plotting the true positive rate (TPR, or also called sensitivity) against the false positive rate (FPR, also known as specificity) at various threshold values.
+For our claims model we have a predict claim score/probability. Now, if we choose a threshold, say 0.50 and predict: a person will claims if his score is larger than 0.5 and will not claim if his score is smaller than 0.5, we can see on our test data set true positives and false positives. The ROC curve is then created by plotting the true positive rate (TPR, or also called sensitivity) against the false positive rate (FPR, also known as specificity) at various threshold values.
 
-We can use the pROC package in R to create such curves
+We can use the `pROC` package in R to create such curves
 
 ```{r, eval=FALSE}
 rocGLMclaims = roc(clm  ~ glm_prediction,  data = testData )
@@ -1579,7 +1503,7 @@ testData %>% roc_auc(Target, tree_prediction)
 
 ### Explain the model, please?
 
-When training random forest or boosting models, it is often hard to explain the model. I.e. why will the model predict for person X a high claim probablity and why does it predict for person Z a low claim probability?
+When training random forest or boosting models, it is often hard to explain the model. I.e. why will the model predict for person X a high claim probability and why does it predict for person Z a low claim probability?
 
 
 The package `lime` can shed some insights into a model decision algorithm. It does this by looking at the top predictor variables and plot their effect on the model prediction.
@@ -1610,17 +1534,16 @@ plot_features(explanation)
 ```
 
 
+## Market basket analysis (MBA)
 
-## Market basket analysis
+With market basket analysis (also called association rules mining) you can identify from transaction data which products are often bought together. This can be used for product recommendations. This kind of analysis originally started in the supermarket branch, but you can apply MBA to any transaction data. Web-traffic for example, which pages are often visited together. 
 
-With market basket analysis (also called association rules mining) you can identify from transactional data which products are often bought together. We use a fictional supermarket data set.
-
-From transactional data, in R the data must be converted to a single `transaction object`. You can do this with the package 'arules'.
-
+We use a fictional supermarket data set in the following analysis. From transaction data, in R the data must be converted to a single `transaction object`. You can do this with the package 'arules'.
 
 
 ```{r, eval = FALSE}
 library(arules)
+
 ## De meest simpele transactionele data set
 trxDF = readRDS("boodschappen.RDs")
 
@@ -1634,14 +1557,14 @@ Groceries = as(
 )
 Groceries
 
-## Visuele Item informatie
+## Item information
 itemFrequencyPlot(Groceries, topN = 35, cex.names = 0.75)
 
+## Calculate the rules
 rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8))
 ```
 
-
-Nu je de regels hebt kan je filteren op regels. Welke regels bevatten bepaalde producten.
+Now that you have calculated the rules you can filter the rules by items. So which rules contain certain products?
 
 ```{r, eval = FALSE}
 rules.subset2 <- subset(rules, lhs %in% c("cereals", "curd"))
@@ -1649,7 +1572,8 @@ rules.subset2
 inspect(head(rules.subset2,n=15))
 ```
 
-Of als iemand een bepaalde reeks transacties heeft welke regels horen daar bij en welk product kan je dan aanraden.
+Or if someone has bought already certain items, what are the rules that correspond with those items, and which products can you then recommend?
+
 
 ```{r, eval = FALSE}
 PersoonA = data.frame(
@@ -1673,7 +1597,7 @@ inspect(rules[rulesMatch[,1]])
 inspect(rules[rulesMatch[,1]]@rhs)
 ```
 
-Een ander manier om regels weer te geven is in een network graph, de verzameling regels vormen in feite een netwerk. A --> B, B --> C, D --> B bijvoorbeeld.
+Another way to visualize the rules is in a network graph, the set of rules is actually a network. A -> B, B -> C, D -> B for example.
 
 ```{r, eval=FALSE}
 library(arulesViz)
@@ -1682,7 +1606,7 @@ plot(head(sort(rules, by = "lift"), n=50), method = "graph", control=list(cex=.8
 
 ### interactive MBA graphs
 
-You can visualise rules in interactive plotly plots or interactive visNetwork plots. First, an interactive scatter plot of the rules can be made. Each rule is plotted as a point, where the x axis represents the support and the y axis represent the confidence of the rule.
+You can visualize rules in interactive plotly plots or interactive visNetwork plots. First, an interactive scatter plot of the rules can be made. Each rule is plotted as a point, where the x axis represents the support and the y axis represent the confidence of the rule.
 
 ```{r, eval=FALSE}
 rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8) )
