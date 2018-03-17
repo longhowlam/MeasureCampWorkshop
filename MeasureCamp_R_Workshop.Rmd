@@ -1587,7 +1587,7 @@ testData %>% roc_auc(Target, tree_prediction)
 
 ### Explain the model, please?
 
-When training random forest or boosting models, it is often hard to explain the model. I.e. why will the model predict for person X a high claim probability and why does it predict for person Z a low claim probability?
+When training random forest or boosting models, it is often hard to explain the model.  I.e. why will the model predict for customer X a high claim probability and why does it predict for customer Z a low claim probability?
 
 
 The package `lime` can shed some insights into a model decision algorithm. It does this by looking at the top predictor variables and plot their effect on the model prediction.
