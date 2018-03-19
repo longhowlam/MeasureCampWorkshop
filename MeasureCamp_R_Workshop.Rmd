@@ -1104,7 +1104,7 @@ p
 
 ### Some more geom_... functions
 
-There are several geom _ functions, we will show a few in the code chuncks below.
+There are several geom _ functions, we will show a few in the code chunks below.
 
 Histograms are a useful way to quickly get an impression of the distribution of the data.
 
@@ -1180,7 +1180,7 @@ p = ggplot(
 p + geom_line()
 ```
 
-Smoothing lines can be helpfull when you want to see if tehere is a trend in a large scatter plot.
+Smoothing lines can be helpful when you want to see if there is a trend in a large scatter plot.
 
 ```{r}
 restaurants = readr::read_csv("Restaurants.csv")
@@ -1287,21 +1287,21 @@ test %>%
 
 ### geom_bin2d
 
-Heatmaps of 2d bin plots kunnen handig zijn om data met veel punten inzichtelijker te maken. Bij veel punten kan je een waarde voor alpha instellen of gebruik maken van 2d bin plots.
+Heat maps or 2D bin plots can be useful way to visualize data sets with many points. 
 
 ```{r, eval=FALSE}
 df = data.frame(x=rnorm(100000), y=rnorm(100000))
 
 ggplot(df, aes(x=x,y=y)) + geom_point()
 
-ggplot(df, aes(x=x,y=y)) + geom_point(alpha=0.01 )
+ggplot(df, aes(x=x,y=y)) + geom_point( alpha=0.01 )
 
 ggplot(df, aes(x=x,y=y)) + geom_bin2d()
 ```
 
 ### facets in ggplot
 
-Met `facets` kan je een matrix van plots maken. Een simpel voorbeeld is als je apart een histogram voor mannen en vrouwen wilt maken en dat naast elkaar of onder elkaar in een plot wilt zetten. Er zijn twee functies in ggplot2 die dit ondersteunen, `facet_grid` en `facet_wrap`
+With `facets` you can make a matrix of plots. A simple example is if you want to create a histogram for men and women separately and put them next to each other or on top of each other in one graph. There are two functions in ggplot2 that support this, `facet_grid` and` facet_wrap`
 
 ```{r, eval=FALSE}
 ## ik zie niks....
@@ -1324,7 +1324,7 @@ restaurants %>%
   ggplot(
     aes(x=aantalreviews)
   ) + 
-  geom_histogram() + facet_wrap(~keuken, ncol = 5)
+  geom_histogram(col="black") + facet_wrap(~keuken, ncol = 5)
 ```
 
 
@@ -1337,8 +1337,8 @@ restaurants %>% filter(prijs < 100) %>%
   geom_point() + facet_wrap(~keuken, ncol = 5)
 ```
 
+There is a nice 'cheat sheet' for ggplot2, it contains a concise overview of the various possibilities and geom functions. The sheet can be found on [ggplot2 cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
-Er is een aardige 'cheatsheet' voor ggplot2. Deze bevat beknopt een overzicht van de verschillende mogelijkheden en kan je vinden op [ggplot2 cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
 
 ## plotly
@@ -1361,7 +1361,7 @@ plot_ly(data = mtcars, x=~mpg, y = ~wt, text = ~naampjes)
 
 ### barcharts
 
-We use the restaurants data set again for some plotly barcharts.
+We use the restaurants data set again for some plotly bar charts.
 
 ```{r,eval=FALSE}
 Restaurants = readr::read_csv("Restaurants.csv")
@@ -1376,7 +1376,7 @@ p = plot_ly(data = keuken,
 p
 ```
 
-The plot above sorts the bars based on the kitchen types alphabetically, to sort it on descending number of restautants we need to rorder the factor.
+The plot above sorts the bars based on the kitchen types alphabetically, to sort it on descending number of restaurants we need to reorder the factor.
 
 ```{r, eval=FALSE}
 keuken = keuken %>%
@@ -1450,7 +1450,7 @@ m2 = m2 %>%
 m2  
 ```
 
-Je kan kleurtje gebruiken, gebruik dan `addCirclemarkers`
+You can color the circles based on data: use `addCirclemarkers`
 
 ```{r, eval=FALSE}
 reds = colorNumeric("Reds", domain = NULL)
