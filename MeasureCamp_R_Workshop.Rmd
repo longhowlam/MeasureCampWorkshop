@@ -1460,7 +1460,90 @@ m2
 
 ## visnetwork
 
-restaurant edges
+The `visnetwork` package can be used to create interactive graph (network) visualisations. You need two data frames, one with the nodes (also called vertices) and one with the edges (links). Let's start with a simple example.
+
+
+```{r, eval=FALSE}
+library(visNetwork)
+
+nodes = data.frame(
+  id = c(1,2,3,4)
+)
+edges = data.frame(
+  from = c(1,3,4), 
+  to  = c(2,2,2)
+)
+
+visNetwork(nodes, edges)
+```
+
+To alter the appearance of the graph several options can be provided trough the nodes and edges data frames.
+
+```{r, eval=FALSE}
+nodes <- data.frame(
+  id = 1:10,
+  label = paste("Node", 1:10),                                   # labels
+  group = c("GrA", "GrB"),                                       # groups
+  value = 1:10,                                                  # size
+  shape = c("square", "triangle", "box", "circle", "dot", "star", "ellipse", "database", "text", "diamond"),    # shape
+  title = paste0("<p><b>", 1:10,"</b><br>Node !</p>"),           # tooltip
+  color = c("darkred", "grey", "orange", "darkblue", "purple"),  # color
+  shadow = c(FALSE, TRUE, FALSE, TRUE, TRUE))                    # shadow
+
+edges <- data.frame(from = sample(1:10,8), to = sample(1:10, 8),
+  label = paste("Edge", 1:8),                                    # labels
+  length = c(100,500),                                           # length
+  arrows = c("to", "from", "middle", "middle;to"),               # arrows
+  dashes = c(TRUE, FALSE),                                       # dashes
+  title = paste("Edge", 1:8),                                    # tooltip
+  smooth = c(FALSE, TRUE),                                       # smooth
+  shadow = c(FALSE, TRUE, FALSE, TRUE))                          # shadow
+
+visNetwork(nodes, edges)
+```
+
+
+Other options can be given via the `visnetwork` function. For example, highlight nearest:
+
+```{r, eval=FALSE}
+nodes <- data.frame(
+  id = 1:15,
+  label = paste("Label", 1:15),
+  group = sample(LETTERS[1:3], 15, replace = TRUE)
+)
+
+edges <- data.frame(
+  from = trunc(runif(15)*(15-1))+1,
+  to = trunc(runif(15)*(15-1))+1
+)
+
+visNetwork(nodes, edges) %>% 
+  visOptions(
+    highlightNearest = TRUE,
+    nodesIdSelection = TRUE
+  )
+```
+
+Another network example: restaurant visitors in the beautiful city of Hoorn. When scraping the Iens website, you can also see that a reviewer has first reviewed a certain restaurant and then another. This is network information.
+
+Focus now only on the beautiful city of Hoorn.
+
+```{r, eval=FALSE}
+Hoornnodes = readRDS("HoornNodes.RDs")
+HoornEdges = readRDS("HoornEdges.RDs")
+
+visNetwork(Hoornnodes, HoornEdges) %>% 
+  visLegend() %>%
+  visOptions(
+    highlightNearest = TRUE, 
+    nodesIdSelection = TRUE
+  ) %>%
+  visInteraction(
+    navigationButtons = TRUE
+  ) %>%
+  visPhysics( maxVelocity = 25)
+```
+
 
 ## zoomable cirlcepack plots
 
