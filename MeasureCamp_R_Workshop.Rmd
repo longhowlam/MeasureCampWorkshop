@@ -1405,6 +1405,59 @@ plot_ly(z = ~volcano) %>% add_surface()
 
 ## leaflet
 
+Leaflets are interactive maps based on openstreetmaps.
+
+```{r, eval=FALSE}
+library(leaflet)
+
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=174.768, lat=-36.852, popup = "The birthplace of R")
+m  
+
+# kan geblokt worden door fire walls.
+```
+
+Plot the Restaurants of Zwolle on a leaflet. 
+
+```{r, eval=FALSE}
+Restaurants <- readr::read_csv("Restaurants.csv")
+Zwolle = Restaurants %>% filter(plaats == "Zwolle", LONGs < 7)
+
+## tooltip teksten kunnen geplaatst worden
+ptekst = paste(
+  Zwolle$restNamen,
+  '<BR> aantal reviews: ',
+  Zwolle$aantalreviews)
+
+m2 = leaflet(data = Zwolle)
+m2 = m2 %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng = ~LONGs, lat = ~LATs, popup = ptekst)
+m2  
+```
+
+Je kan kleurtje gebruiken, gebruik dan `addCirclemarkers`
+
+```{r, eval=FALSE}
+reds = colorNumeric("Reds", domain = NULL)
+
+Zwolle = Zwolle %>% filter(!is.na(aantalreviews), aantalreviews < 80)
+ptekst = paste(Zwolle$restNamen, '<BR> aantal reviews: ', Zwolle$aantalreviews)
+
+m2 = leaflet(data = Zwolle)
+m2 = m2 %>%
+  addTiles() %>%
+  addCircleMarkers(
+    lng = ~LONGs,
+    lat = ~LATs, 
+    fillColor = ~reds(aantalreviews), 
+    fillOpacity = 1, popup = ptekst
+  )
+m2
+```
+
+
 ## visnetwork
 
 restaurant edges
