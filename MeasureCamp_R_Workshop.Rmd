@@ -244,7 +244,7 @@ TRUE | FALSE    # OR
 x < 7 | x > 8
 ```
 
-In R you can use logicals in calculations.
+In R you can use logical data in calculations.
 
 ```{r, eval = FALSE}
 TRUE + TRUE
@@ -367,8 +367,8 @@ x5 = rep(1:10, each = 3)
 The `cut` function to make factor vectors from double vectors.
 
 ```{r}
-x <- rnorm(100)
-y <- cut(x, 4)
+x = rnorm(100)
+y = cut(x, 4)
 ```
 
 
@@ -599,7 +599,7 @@ Now that there connection named `my-connector` we can use that in R to connect.
 library(odbc)
 library(DBI)
 library(dplyr)
-con_sql <- dbConnect(odbc::odbc(), "my-connector")
+con_sql = dbConnect(odbc::odbc(), "my-connector")
 cars = tbl(con_sql, "mtcars")
 
 ```
@@ -897,7 +897,7 @@ Suppose we have the following data:
 
 ```{r, eval=FALSE}
 library(tidyr)
-stocks <- data.frame(
+stocks = data.frame(
   time = as.Date('2009-01-01') + 0:9,
   X = rnorm(10, 0, 1),
   Y = rnorm(10, 0, 2),
@@ -909,7 +909,7 @@ stocks
 Sometimes it is useful to have data values in one column and a separate column that represents the corresponding variable.
 
 ```{r, eval=FALSE}
-stocksm <- stocks %>% gather(stock, price, -time)
+stocksm = stocks %>% gather(stock, price, -time)
 stocksm
 ```
 
@@ -1072,6 +1072,7 @@ Below is a first example of a ggplot on the `mtcars` data set.
 
 ```{r, eval=FALSE}
 library(ggplot2)
+library(dplyr)
 
 ## een laag p
 p = ggplot(mtcars, aes(x=hp, y = mpg))
@@ -1085,7 +1086,7 @@ p = p + geom_point()
 ```
 
 
-Laat de plot zien door hem te 'printen'.
+Show the plot by 'printing' it.
 
 ```{r, eval=FALSE}
 p
@@ -1101,18 +1102,12 @@ p
 ```
 
 
-De algemene graphing template in ggplot heeft de volgende vorm:
+### Some more geom_... functions
 
-```{r, eval=FALSE, include=FALSE}
-ggplot(data = <DATA>) + 
-  <GEOM_FUNCTION>(mapping = aes(<MAPPINGS>))
-```
+There are several geom _ functions, we will show a few in the code chuncks below.
 
-### geom_... functies
+Histograms are a useful way to quickly get an impression of the distribution of the data.
 
-Er zijn diverse geom_... functies, we zullen hieronder er een paar laten zien. 
-
-Histogrammen zijn een handige manier om snel een indruk te krijgen van de verdeling van de data
 
 ```{r, eval=FALSE}
 #### histogrammen
@@ -1129,14 +1124,14 @@ p + geom_histogram(
 ) 
 ```
 
-Box plots kan je ook gebruiken om een indruk te krijgen van de verdeling van de data. Ze bevatten visueel wat minder detail dan histogrammen, maar je kan er makkelijk een aantal naast elkaar zijn. We gebruiken de `mpg` data set en kijken naar de verdeling van highway miles per gallon (hwy) voor verschillende type autos.
+Box plots can also be used to get an impression of the distribution of the data. They contain visually less details than histograms, but you can more easily put multiple box plots next to each other. We use the `mpg` data set and look at the distribution of highway miles per gallon (hwy) for different types of cars.
 
 ```{r, eval=FALSE}
 p = ggplot(mpg, aes(class, hwy)) + geom_boxplot()
 p
 ```
 
-Je kan ook groupeerde boxplots maken en de volgorde van de boxplots wijzigen, bijvoorbeeld op aflopende mediaan.
+You can also create grouped box plots and change the order of the box plots, for example on decreasing median.
 
 ```{r, eval=FALSE}
 p = ggplot(
@@ -1155,7 +1150,7 @@ p + geom_boxplot()
 
 ### lines and smoothing lines
 
-Lijn grafieken zijn handig om tijdreeksen te visualiseren
+Line charts are useful for visualizing time series.
 
 ```{r, eval=FALSE}
 df = data.frame(x=1:100, y=rnorm(100))
@@ -1200,26 +1195,33 @@ restaurants %>%
   geom_smooth()
 ```
 
-
-
 ### bar plots
 
-Bar plots zijn handig om bijvoorbeeld aantallen per categorie te visualiseren. Laten we naar top 10 keukens kijken in 'restaurant' data. Deze data heb ik een tijdje geleden van de site Iens gescraped, er staan 20.000 restaurants in met een aantal kenmerken.
+Bar plots can be useful to visualize counts per category. Let's for example look at top 10 kitchen types in the 'restaurant' data. I scraped this data from the Iens site a while ago, there are around 20,000 restaurants with a number of characteristics.
+
 
 ```{r, eval=FALSE, fig.width=10, fig.height=8}
 restaurants = readr::read_csv("Restaurants.csv")
 
 restaurants %>%
-  group_by(keuken) %>%
-  summarise(n=n()) %>%
-  arrange(desc(n)) %>% 
-  filter(!is.na(keuken)) %>%
+  group_by(
+    keuken
+  ) %>%
+  summarise(
+    n=n()
+  ) %>%
+  arrange(
+    desc(n)
+  ) %>% 
+  filter(
+    !is.na(keuken)
+  ) %>%
   slice(1:10) %>%
-  ggplot(aes(x=keuken)) + 
-  geom_bar(aes(weight=n))
+  ggplot(aes(x = keuken)) + 
+    geom_bar(aes(weight = n))
 ```
 
-Je kan sorteren 
+You can sort on the number of restaurants.
 
 ```{r, eval=FALSE, fig.width=12}
 restaurants %>%
@@ -1229,22 +1231,28 @@ restaurants %>%
   summarise(
     n=n()
   ) %>%
-  filter(!is.na(keuken)) %>%
+  filter(
+    !is.na(keuken)
+  ) %>%
+  arrange(
+    desc(n)
+  ) %>% 
   slice(1:10) %>%
   mutate(
     keuken = forcats::fct_reorder(keuken, n)
   ) %>%
   ggplot(aes(x=keuken)) + 
-  geom_bar(aes(weight=n))
+    geom_bar(aes(weight=n))
 
 ```
 
-Je kan stacked en of grouped bar charts maken om meer dimensies te visualiseren
+You can create stacked or grouped bar charts to visualize more dimensions.
 
 ```{r, eval=FALSE}
 test = restaurants %>% 
   filter(
-    plaats %in% c("Rotterdam", "Utrecht", "Amsterdam")
+    plaats %in% c("Rotterdam", "Utrecht", "Amsterdam"),
+    keuken %in% c("Internationaal", "Hollands", "Frans", "Italiaans")
   ) %>%
   group_by(
     keuken, plaats
@@ -1252,7 +1260,11 @@ test = restaurants %>%
   summarise(n=n()) %>%
   filter(
     !is.na(keuken)
-    ) 
+    )  %>% 
+  arrange(
+    desc(n)
+  ) %>% 
+  slice(1:10) 
    
 ##  in de aes kun je fill opgeven en met position kan je stacked of grouped opgeven 
 test %>%
@@ -1264,7 +1276,7 @@ test %>%
   geom_bar(stat="identity", position = "dodge") 
 ```
 
-Soms wil je horizontale barcharts, gebruik dan nog een extra coordinate flip.
+Sometimes you want horizontal bar charts, to do plot that use a coordinate flip.
 
 ```{r, eval=FALSE}
 test %>%
@@ -1315,6 +1327,7 @@ restaurants %>%
   geom_histogram() + facet_wrap(~keuken, ncol = 5)
 ```
 
+
 ```{r, eval = FALSE}
 restaurants %>% filter(prijs < 100) %>%
   inner_join(top10) %>%
@@ -1351,7 +1364,7 @@ plot_ly(data = mtcars, x=~mpg, y = ~wt, text = ~naampjes)
 We use the restaurants data set again for some plotly barcharts.
 
 ```{r,eval=FALSE}
-Restaurants <- readr::read_csv("Restaurants.csv")
+Restaurants = readr::read_csv("Restaurants.csv")
 keuken = Restaurants %>% dplyr::group_by(keuken) %>% dplyr::summarise(n=n())
 
 p = plot_ly(data = keuken,
@@ -1410,7 +1423,7 @@ Leaflets are interactive maps based on openstreetmaps.
 ```{r, eval=FALSE}
 library(leaflet)
 
-m <- leaflet() %>%
+m = leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addMarkers(lng=174.768, lat=-36.852, popup = "The birthplace of R")
 m  
@@ -1421,7 +1434,7 @@ m
 Plot the Restaurants of Zwolle on a leaflet. 
 
 ```{r, eval=FALSE}
-Restaurants <- readr::read_csv("Restaurants.csv")
+Restaurants = readr::read_csv("Restaurants.csv")
 Zwolle = Restaurants %>% filter(plaats == "Zwolle", LONGs < 7)
 
 ## tooltip teksten kunnen geplaatst worden
@@ -1480,7 +1493,7 @@ visNetwork(nodes, edges)
 To alter the appearance of the graph several options can be provided trough the nodes and edges data frames.
 
 ```{r, eval=FALSE}
-nodes <- data.frame(
+nodes = data.frame(
   id = 1:10,
   label = paste("Node", 1:10),                                   # labels
   group = c("GrA", "GrB"),                                       # groups
@@ -1490,7 +1503,7 @@ nodes <- data.frame(
   color = c("darkred", "grey", "orange", "darkblue", "purple"),  # color
   shadow = c(FALSE, TRUE, FALSE, TRUE, TRUE))                    # shadow
 
-edges <- data.frame(from = sample(1:10,8), to = sample(1:10, 8),
+edges = data.frame(from = sample(1:10,8), to = sample(1:10, 8),
   label = paste("Edge", 1:8),                                    # labels
   length = c(100,500),                                           # length
   arrows = c("to", "from", "middle", "middle;to"),               # arrows
@@ -1506,13 +1519,13 @@ visNetwork(nodes, edges)
 Other options can be given via the `visnetwork` function. For example, highlight nearest:
 
 ```{r, eval=FALSE}
-nodes <- data.frame(
+nodes = data.frame(
   id = 1:15,
   label = paste("Label", 1:15),
   group = sample(LETTERS[1:3], 15, replace = TRUE)
 )
 
-edges <- data.frame(
+edges = data.frame(
   from = trunc(runif(15)*(15-1))+1,
   to = trunc(runif(15)*(15-1))+1
 )
@@ -1558,7 +1571,7 @@ Create some dummy data. The following code creates a hierarchical list.
 ```{r, eval= FALSE}
 library(circlepackeR)
 
-hierarchical_list <- list(
+hierarchical_list = list(
   name = "World",
   children = list(
     list(name = "North America",
@@ -1625,7 +1638,7 @@ GNI2014 = GNI2014 %>%
 
 # transform this data to a hierarchical tree that is suitable for circlepackR
 # 
-population <- as.Node(GNI2014, pathName = "webpath")
+population = as.Node(GNI2014, pathName = "webpath")
 circlepackeR(population,  size = "population")
 circlepackeR(population,  size = "GNI")
 ```
@@ -2078,7 +2091,7 @@ explain_cases = bind_rows(
 )
 
 # explain the 6 cases in terms of the top 5 features
-explanation <- lime::explain(
+explanation = lime::explain(
   explain_cases,
   explainer, 
   n_labels = 2,
@@ -2116,13 +2129,13 @@ Groceries
 itemFrequencyPlot(Groceries, topN = 35, cex.names = 0.75)
 
 ## Calculate the rules
-rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8))
+rules = apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8))
 ```
 
 Now that you have calculated the rules you can filter the rules by items. So which rules contain certain products?
 
 ```{r, eval = FALSE}
-rules.subset2 <- subset(rules, lhs %in% c("cereals", "curd"))
+rules.subset2 = subset(rules, lhs %in% c("cereals", "curd"))
 rules.subset2
 inspect(head(rules.subset2,n=15))
 ```
@@ -2145,7 +2158,7 @@ trxs_trans = as(
 )
 inspect(trxs_trans)
 
-rulesMatch <- is.subset(rules@lhs,trxs_trans)
+rulesMatch = is.subset(rules@lhs,trxs_trans)
 
 ## er zijn meerdere regels, je zou degene met de hoogste lift kunnen kiezen
 inspect(rules[rulesMatch[,1]])
@@ -2164,7 +2177,7 @@ plot(head(sort(rules, by = "lift"), n=50), method = "graph", control=list(cex=.8
 You can visualize rules using interactive plotly plots or interactive visNetwork plots. First, an interactive scatter plot of the rules can be made. Each rule is plotted as a point, where the x axis represents the support and the y axis represent the confidence of the rule.
 
 ```{r, eval=FALSE}
-rules <- apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8) )
+rules = apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8) )
 rulesDF = rules %>% DATAFRAME()
 
 library(plotly)
@@ -2177,7 +2190,7 @@ Secondly, an interactive visNetwork can be created. We need to extract the nodes
 ```{r, eval=FALSE}
 library(visNetwork)
 
-rules <- apriori(
+rules = apriori(
   Groceries, 
   parameter = list(
     supp = 0.0001, 
