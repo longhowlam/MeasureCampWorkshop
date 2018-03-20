@@ -49,7 +49,6 @@ Start with powerpoint slides over R followed by an intro in RStudio:
 The R Console is a place where you can quickly run a short piece of code. Type in an R expression and Enter to run. Output of scripts also appears in the R Console.
 
 
-
 ## Scripts 
 
 R Script files are ordinary text files (*.R) with R code. In RStudio you can open and edit multiple scripts. Scripts that belong together can be put in an R Project. Via the File menu> New File> R Script you can create a new R script file in RStudio. Or use the short cut: Ctrl + Shift + N.
@@ -59,8 +58,7 @@ In an R script you type code and if you move the cursor on a line you can run th
 
 ## R Notebooks / R Markdown files
 
-R notebooks and R Markdown files contain more than just R code, it is a 'complete' document with R code, output and a descriptive story line. In an R project you can also manage several of these notebooks (or markdown files) and scripts. Note books are created with R markdown, a sort of light weight markup language in which you can specify headers, figures and bold prints, for example. This R course is written in an R markdown file. A notebook / markdown file contains ** R code chunks ** that you can run.
-
+R notebooks and R Markdown files contain more than just R code, it is a 'complete' document with R code, output and a descriptive story line. In an R project you can also manage several of these notebooks (or markdown files) and scripts. Note books are created with R markdown, a sort of light weight markup language in which you can specify headers, figures and bold prints, for example. This R course is written in an R markdown file. A notebook / markdown file contains ** R code chunks** that you can run.
 
 If you press the 'Preview' button above the R notebook you will see a separate window with the **result of the R notebook**. Therefore, RStudio creates a separate file that has the name `<file_name>.nb.html`. This is a html file that you can share with others.
  
@@ -72,9 +70,9 @@ Besides the nb.html, you can also "knit" an R notebook / markdown file into an h
 Organize your R work in projects. A project can consist of different scripts, notebooks, data and output, which you would like to have in one folder. In RStudio you can work very conveniently with different R projects. Through the RStudio interface you can create and manage projects: File> New Project...
 
 
-## Git version controle
+## Git version control
 
-Git is a version control system. In RStudio you can easily use git. You will have to install it first. On Windows you can install git via [the git site] (https://git-scm.com/download/win). We will not discuss this further in this workshop.
+Git is a version control system. In RStudio you can easily use git. You will have to install it first. On Windows you can install git via [the git site] (https://git-scm.com/download/win). We will not discuss Git further in this workshop.
 
 
 ## A few simple R expressions to get started
@@ -109,7 +107,7 @@ test
 
 ---
 
-All data in R is of a certain type, we will discuss the different data types below. with the `typeof` function you can always request the type of an object in R.
+All data in R is of a certain type, we will discuss the different data types in the sections below. with the `typeof` function you can always request the type of an object in R.
 
 ## Numerical data
 
@@ -124,12 +122,13 @@ x5 = 5.6 / 8
 x6 = pi/2
 
 is.double(x4)
+typeof(x4)
 ```
 
 
 ### Integer data type
 
-The `integer` data type in R also represent numerical values. In contrast to doubles they represent only natural numbers. For example, a count variable: number of children (0, 1, 2, ... ).
+The `integer` data type in R also represent numerical values. In contrast to doubles they represent only natural numbers. For example a count variable: the number of children (0, 1, 2, ... ).
 
 
 ```{r, eval=FALSE}
@@ -172,6 +171,7 @@ nchar(x2)
 
 x3 = paste(x1, x2)
 x3 = paste(x1, x2, sep="")
+x3 = paste0(x1, x2)
 ```
 
 
@@ -179,7 +179,7 @@ x3 = paste(x1, x2, sep="")
 
 In R, `factors` are meant to represent categorical variables. For example, gender, or education. Do not confuse a factor with the character type, you can create factor variables from character variables. In some predictive modeling functions you explicitly need factor variables and not character.
 
-Consumer data sets may include names or surnames of persons of the type character, but for example the gender or education are often of the type of factor.
+Consumer data sets may include names or surnames of persons, these are often character data type. But for example the gender or education are often of the type of factor.
 
 
 ```{r, eval=FALSE}
@@ -217,7 +217,7 @@ x1
 x2
 ```
 
-Note that in R, you can test if a double object is equal to an integer object, in other some languages this is not possible.
+Note that in R, you can test if a double object is equal to an integer object, in some other languages this is not possible.
 
 ```{r, eval = FALSE}
 is.integer(x2)
@@ -229,17 +229,17 @@ x1 == x2
 The next block of code shows logical operators.
 
 ```{r, eval=FALSE}
-# ampersand is testen op "DIT"" EN "DAT""
+# ampersand: use it to test AND
 TRUE & FALSE    # AND
 
 x = 9
 x < 10 & x > 5
 
-# negatie, tegenovergestelde
+# negate (NOT) 
 !TRUE           # NOT
 !FALSE
 
-# vertical pipe is testen op "dit"" OF "dat""
+# OR
 TRUE | FALSE    # OR
 x < 7 | x > 8
 ```
@@ -252,19 +252,6 @@ FALSE + FALSE + TRUE
 
 x = rnorm(10000)
 sum(x>2)
-```
-
-
-What the F... is this?  Do you know why this is happening?
-
-```{r, eval = FALSE}
-0.1 + 0.2 == 0.3
-
-1 + 2 == 3
-x = 0.3
-
-sprintf("%.16f", x)
-sprintf("%.24f", x)
 ```
 
 
@@ -320,7 +307,6 @@ x3 = c("p", 2)
 
 There are several functions in R that you can use to generate vectors without typing all the elements one by one :-)
 
-
 ```{r, eval = FALSE}
 x1 = 1:1000
 x1 = 187:278
@@ -328,7 +314,7 @@ x1 = 187:278
 x2 = seq(1, 50, length=100)
 x2a = seq(1,500, by = 20)
 
-## samenvoegen van twee of meer vectoren
+## combining two or more vectors
 x3 = c( x0, rnorm(100))
 
 class(x4)
@@ -348,7 +334,6 @@ runif(100,8,10)
 # trekken uit een vector
 x4 = sample( letters, rep = TRUE, size = 100)
 ```
-
 
 Calculations on vectors take place on element level by default.
 
@@ -372,7 +357,6 @@ y = cut(x, 4)
 ```
 
 
-
 ### Subscripting of vectors
 
 How do you approach elements in a vector? That is possible with subscripts.
@@ -393,7 +377,7 @@ x3[8.9]
 x3[  8:17  ] = 0
 ```
 
-You can also specify a vector of TRUE / FALSE as a subscript.
+You can also specify a vector of TRUE / FALSE as a subscript, then only the TRUE values are taken.
 
 ```{r, eval=FALSE}
 x = rnorm(100)
@@ -474,7 +458,6 @@ round(m2 %*% solve(m2))
 
 A data frame can be seen as a matrix, but unlike a matrix, columns of a data frame can be of a different data type. For data analysis with 'real' data, a data frame will be the most useful structure. For example, you have a factor column 'Gender', double columns with 'Age' and 'Income' and you can have a character column with 'surname'.
 
-
 ```{r, eval=FALSE}
 x1 = 1:100
 x2 = rnorm(100)
@@ -544,14 +527,15 @@ df1
 ```
 
 
-
 # Importing data
 
 ---
 
 ## The 'Import Dataset' gui
 
-## Import functions
+Just under the 'Environment' tab there is an *Import Dataset* menu that you can use to import data sets from the GUI.
+
+## The Import functions
 
 If want to analyze data in R, you obviously need data. Until now we have created our data manually with code. In real life you have already data in files or databases.
 
@@ -563,16 +547,15 @@ There are a number of packages that are useful for reading files.
 
 Base R also has standard functions for importing text files, but I often use the functions from the `readr` package. It is much faster for larger files, and you will also see a progress bar. In RStudio, you can also call the import functions via the ** Import Dataset ** GUI which guides you through the process of importing data.
 
-
 ```{r, eval=FALSE}
 ### data met restaurants in Nederland
 library(readr)
-Restaurants = read_csv("data/Restaurants.csv")
+Restaurants = read_csv("Restaurants.csv")
 
 ### Excel files inlezen
 library(readxl)
 test = read_excel(
-  "data/test.xlsx",
+  "test.xlsx",
   range = "D8:F14"
 )
 ```
@@ -580,7 +563,6 @@ test = read_excel(
 ## RDS files
 
 You can save R objects (not only data frames) with the `saveRDS` function, and these can be imported back into R again with the` readRDS` function. The files that `saveRDS` creates are binary files, they are smaller than text files and are faster to read in R again.
-
 
 ```{r, eval = FALSE}
 x = rnorm(100)
@@ -622,7 +604,6 @@ For more details on connecting R to a database see [this website](https://db.rst
 ---
 
 This library is very useful to prepare data in R. The syntax is elegant and dplyr code can also be used for data that is not in R. For example, data in Spark can be edited with dplyr code. There are many "key" functions, but the most important ones are `select`,` filter`, `mutate`,` arrange`, `summarize`,` slice` and `rename`. The nice thing about these functions is that they can be used with the `%>%` chain operator. 
-
 
 ### Seleceting columns with `select`
 
@@ -677,7 +658,6 @@ mycars = mtcars %>%
   )
 ```
 
-
 You can create new columns that depend on columns that you just create in mutate.
 
 ```{r, eval=FALSE}
@@ -688,7 +668,6 @@ mycars = mtcars %>%
     tmp2 = tmp + 1
   )
 ```
-
 
 ### Create `distinct` rows
 
@@ -704,7 +683,6 @@ myset = mtcars %>%
   select(10,11) %>%
   distinct
 ```
-
 
 ### Selecting rows from data with `filter`
 
@@ -749,7 +727,6 @@ by_cyl = group_by(mtcars, cyl)
 class(by_cyl)
 
 summarise(by_cyl, Naampje1 = mean(disp), Naampje2 = mean(hp))
-
 
 ## maar vaak doe je de twee in 1 run samen
 out = mtcars %>%
@@ -803,7 +780,6 @@ TMP = mtcars %>%
   filter(rank ==1)
 ```
 
-
 ### Joining data sets
 
 With dplyr you can easily join data frames. There are several joins that are supported. We give a number of examples here.
@@ -848,7 +824,6 @@ df6 = df1 %>% anti_join(
 ## alle rijen van df1 en df2
 full_join(df1, df2, by = c("col1" = "col1"))
 ```
-
 
 <br>
 
@@ -995,15 +970,12 @@ patroon = "[[:punct:]]"
 str_extract(test, patroon)
 ```
 
-
 A nice cheat sheet on regular expressions can be found here: [regex cheatsheet](https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
-
 
 ## Dates and times in R
 
 ---
 To work with dates (and times) in R, the packages `anytime` and` lubridate` are very useful. Let's assume that we have characters with dates and want to use them in calculations. Then we can use the `anydate` function from the anytime package or one of the `ymd` functions.
-
 
 ```{r, eval=FALSE}
 library(lubridate)
@@ -1059,7 +1031,6 @@ MeetData = MeetData %>%
 ```
 
 
-
 # Data visualisation
 
 ---
@@ -1085,7 +1056,6 @@ typeof(p)
 p = p + geom_point()
 ```
 
-
 Show the plot by 'printing' it.
 
 ```{r, eval=FALSE}
@@ -1100,7 +1070,6 @@ p = p +
   ggtitle("AUTO PLOTS \n EEN VOORBEELDJE") 
 p
 ```
-
 
 ### Some more geom_... functions
 
@@ -1198,7 +1167,6 @@ restaurants %>%
 ### bar plots
 
 Bar plots can be useful to visualize counts per category. Let's for example look at top 10 kitchen types in the 'restaurant' data. I scraped this data from the Iens site a while ago, there are around 20,000 restaurants with a number of characteristics.
-
 
 ```{r, eval=FALSE, fig.width=10, fig.height=8}
 restaurants = readr::read_csv("Restaurants.csv")
@@ -1340,7 +1308,6 @@ restaurants %>% filter(prijs < 100) %>%
 There is a nice 'cheat sheet' for ggplot2, it contains a concise overview of the various possibilities and geom functions. The sheet can be found on [ggplot2 cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
 
-
 ## plotly
 
 In addition to the statistical graphs we have made with ggplot2, you can also create interactive graphs in R. We give a number of examples in the following code chunks.
@@ -1415,7 +1382,6 @@ volcano
 plot_ly(z = ~volcano) %>% add_surface()
 ```
 
-
 ## leaflet
 
 Leaflets are interactive maps based on openstreetmaps.
@@ -1470,11 +1436,9 @@ m2 = m2 %>%
 m2
 ```
 
-
 ## visnetwork
 
 The `visnetwork` package can be used to create interactive graph (network) visualisations. You need two data frames, one with the nodes (also called vertices) and one with the edges (links). Let's start with a simple example.
-
 
 ```{r, eval=FALSE}
 library(visNetwork)
@@ -1514,7 +1478,6 @@ edges = data.frame(from = sample(1:10,8), to = sample(1:10, 8),
 
 visNetwork(nodes, edges)
 ```
-
 
 Other options can be given via the `visnetwork` function. For example, highlight nearest:
 
@@ -1556,7 +1519,6 @@ visNetwork(Hoornnodes, HoornEdges) %>%
   ) %>%
   visPhysics( maxVelocity = 25)
 ```
-
 
 ## zoomable cirlcepack plots
 
@@ -1644,8 +1606,6 @@ circlepackeR(population,  size = "GNI")
 ```
 
 
-
-
 # Machine learning
 
 ---
@@ -1664,7 +1624,6 @@ I'll also show market basket analysis with the package `arules`. A technique to 
 ## Lineare regression 
 
 We start with simple linear regression, used for predictive models where the Target variable is continuous (numeric). We take as an example, house price data that I scraped from www.jaap.nl. We want to predict the price of a house based on a number of input variables / characteristics.
-
 
 ```{r, eval = FALSE}
 jaap = readRDS("Jaap.RDs")
@@ -1712,7 +1671,6 @@ jaap = jaap %>% filter( prijs < 2000000 )
 modelout  = lm( prijs ~ kamers               , data = jaap)
 modelout2 = lm( prijs ~ kamers + Oppervlakte , data = jaap) 
 ```
-
 
 ### formula objects
 
@@ -1764,7 +1722,6 @@ f6 = prijs ~ . -PC6 -PC
 m6 = lm(f6, data = jaap)
 summary(m6)
 ```
-
 
 ### Buckets / linear constant  and splines 
 
@@ -1818,7 +1775,6 @@ ggplot(NieuweHuizen, aes(x=Oppervlakte, y = prijs2)) + geom_point() + geom_point
 
 ```
 
-
 ## Classification
 
 We use insurance data from the library `insuranceData` to demonstrate classification models. This data set is based on anonymized one-year vehicle insurance policies taken out in 2004 or 2005. There are 67856 policies, of which 4624 (6.8%) had at least one claim. 
@@ -1862,7 +1818,6 @@ dataCar = dataCar %>%
 table(dataCar$Target)
 ```
 
-
 ### split data set
 
 ```{r, eval=FALSE}
@@ -1870,7 +1825,6 @@ TT = rsample::initial_split(dataCar)
 trainData = training(TT)
 testData = testing(TT)
 ```
-
 
 ### Logistic regression
 
@@ -1881,7 +1835,6 @@ library(ggplot2)
 ggplot(trainData, aes(x=exposure,y=clm)) + geom_point()
 ggplot(trainData, aes(x=exposure,y=clm)) + geom_smooth()
 ```
-
 
 We can use the function `glm` in R to fit / train logistic regression models in R.
 
@@ -1896,7 +1849,6 @@ summary(cars_glm)
 ```
 
 Interpretation of the coefficient $c$ for a variable $x$ is as follows. One unit increase in the variable $x$ means $\exp(c)$ more likely that you will claim. So positive coefficient values mean increase of claim probability when $x$ increases, and negative values mean a decrease of claim probability when $x$ increases.
-
 
 ### Decision tree
 
@@ -1921,7 +1873,6 @@ visTree(
   minNodeSize = 10, maxNodeSize = 30
 )
 ```
-
 
 ### Random forest and Boosted trees
 
@@ -1949,7 +1900,6 @@ tree_ensemble = h2o.gbm(
 )
 ```
 
-
 ## Variable importance
 
 A nice output of tree based methods are the variable importance statistics. If an input variable is used often in splitting, then that variable is important. For our claims data set we can see which variable were important in building the tree and which variables were not important.
@@ -1958,7 +1908,6 @@ A nice output of tree based methods are the variable importance statistics. If a
 cars_tree$variable.importance
 h2o.varimp_plot(tree_ensemble)
 ```
-
 
 ## How good is the model?
 
@@ -1992,7 +1941,6 @@ testData = testData %>% mutate(
 )
 ```
 
-
 The gbm model in h2o is slightly more tricky, the following statement predicts
 on the data in h2o, if we want to use it in R we need to bring it to R 
 
@@ -2007,7 +1955,6 @@ testData = testData %>% mutate(
     .[,3]
 )
 ```
-
 
 ### Lift percentages
 
@@ -2048,7 +1995,6 @@ testData %>% group_by(percGLM) %>%  summarise(target = mean(clm))
 testData %>% group_by(percENSEMBLE) %>%  summarise(target = mean(clm))
 ```
 
-
 ### Receiver Operating Characteristic (ROC) Curve
 
 For our claims model we have a predict claim score/probability. Now, if we choose a threshold, say 0.50 and predict: a person will claims if his score is larger than 0.5 and will not claim if his score is smaller than 0.5, we can see on our test data set true positives and false positives. The ROC curve is then created by plotting the true positive rate (TPR, or also called sensitivity) against the false positive rate (FPR, also known as specificity) at various threshold values.
@@ -2067,7 +2013,6 @@ plot(rocTREEclaims, col=2, add=TRUE)
 testData %>% roc_auc(Target, prediction)
 testData %>% roc_auc(Target, tree_prediction)
 ```
-
 
 ### Explain the model, please?
 
@@ -2101,13 +2046,11 @@ explanation = lime::explain(
 plot_features(explanation)
 ```
 
-
 ## Market basket analysis (MBA)
 
 With market basket analysis (also called association rules mining) you can identify from transaction data which products are often bought together. This can be used for product recommendations. This kind of analysis originally started in the supermarket branch, but you can apply MBA to any transaction data. Web-traffic for example, which pages are often visited together. 
 
 We use a fictional supermarket data set in the following analysis. From transaction data, in R the data must be converted to a single `transaction object`. You can do this with the package 'arules'.
-
 
 ```{r, eval = FALSE}
 library(arules)
@@ -2222,8 +2165,6 @@ visNetwork(nodes, rulesDF) %>%
    visOptions(highlightNearest = TRUE,  nodesIdSelection = TRUE) %>%
    visEdges(smooth = TRUE) 
 ```
-
-
 
 <br>
 
