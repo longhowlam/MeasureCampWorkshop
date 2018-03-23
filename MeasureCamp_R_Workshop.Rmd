@@ -782,11 +782,10 @@ TMP = mtcars %>%
 
 ### Joining data sets
 
-With dplyr you can easily join data frames. There are several joins that are supported. We give a number of examples here.
+With dplyr you can easily join data frames. There are several joins that are supported. We give a number of examples here. First create two dummy data sets.
 
 
 ```{r, eval=FALSE}
-### maak twee data frames aan
 df1 = data.frame(
   col1 = c(1,2,3,4,5), tt = rnorm(5)
 )
@@ -795,6 +794,12 @@ df2 = data.frame(
   col1 = c(3,4,5,6,7), xx = rnorm(5), zz = runif(5)
 )
 
+```
+
+Now perform some different joins on the two data sets.
+
+
+```{r, eval = FALSE}
 ## selecteer rijen die zowel in df1 en df2 zitten 
 df3 = inner_join(
   df1, 
@@ -1384,7 +1389,7 @@ plot_ly(z = ~volcano) %>% add_surface()
 
 ## leaflet
 
-Leaflets are interactive maps based on openstreetmaps.
+Leaflets are interactive maps based on open street maps.
 
 ```{r, eval=FALSE}
 library(leaflet)
@@ -1438,7 +1443,7 @@ m2
 
 ## visnetwork
 
-The `visnetwork` package can be used to create interactive graph (network) visualisations. You need two data frames, one with the nodes (also called vertices) and one with the edges (links). Let's start with a simple example.
+The `visnetwork` package can be used to create interactive graph (network) visualizations. You need two data frames, one with the nodes (also called vertices) and one with the edges (links). Let's start with a simple example.
 
 ```{r, eval=FALSE}
 library(visNetwork)
@@ -1522,7 +1527,7 @@ visNetwork(Hoornnodes, HoornEdges) %>%
 
 ## zoomable cirlcepack plots
 
-Circle packings are a nice way to visualize hierchical data. For example click data or web path logs. First install the `circlepackeR` package from GitHub.
+Circle packings are a nice way to visualize hierarchical data. For example click data or web path logs. First install the `circlepackeR` package from Git Hub.
 
 ```{r, eval = FALSE}
 devtools::install_github("jeromefroe/circlepackeR")
@@ -1618,7 +1623,7 @@ In R you can create different machine learning models, in this script I will dem
 In supervised learning you are predicting an observed 'Target', observed 'behavior' from data. When this target is binary we have a classification problem. For example we observed whether or not customers responded to a mailing, whether or not a customer had a car accident. When this target is numeric we have a regression problem. 
 
 
-I'll also show market basket analysis with the package `arules`. A technique to o analyse transactional data. For example physical purchases in supermarket or web clicks on a site.
+I'll also show market basket analysis with the package `arules`. A technique to o analyse transaction data. For example physical purchases in supermarket or web clicks on a site.
 
 
 ## Lineare regression 
