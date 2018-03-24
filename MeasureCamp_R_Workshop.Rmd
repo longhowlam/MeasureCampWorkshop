@@ -1156,7 +1156,7 @@ p + geom_line()
 
 Smoothing lines can be helpful when you want to see if there is a trend in a large scatter plot.
 
-```{r}
+```{r, eval=FALSE}
 restaurants = readr::read_csv("Restaurants.csv")
 
 ggplot(data = restaurants, aes(aantalreviews, prijs)) + geom_point()
