@@ -26,7 +26,7 @@ output:
 
 <br>
 
-! WARNING !  **This document will contain more material than I can handle during the 3 hour workshop. **
+! WARNING !  **This document will contain more material than I can handle during the 3 hour workshop. But don't worry that is OK**
 
 <br>
 
