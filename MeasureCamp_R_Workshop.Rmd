@@ -571,7 +571,7 @@ saveRDS(x, "x.RDs")
 
 ## Database connection
 
-In R you can connect to external databases, like MySQL, Apache HIVE or SQL Server. You can use odbc, and on Linux there is config file to specify the connection to the specific database. An example is given below where an odbc connection is used to connect to a MySQl database server.
+In R you can connect to external databases, like MySQL or SQL Server, but also to data in HIVE or Spark. You can use odbc, and on Linux there is config file to specify the connection to the specific database. An example is given below where an odbc connection is used to connect to a MySQl database server via a .my.conf file in Linux
 
 ![](odbcini.PNG)
 
@@ -581,18 +581,33 @@ Now that there connection named `my-connector` we can use that in R to connect.
 library(odbc)
 library(DBI)
 library(dplyr)
-con_sql = dbConnect(odbc::odbc(), "my-connector")
+con = dbConnect(odbc::odbc(), "my-connector")
+```
 
-con <- dbConnect(odbc::odbc(), "my-connector")
+Or you can use a connection string like the examples below, which also works on Windows machines. The first one is a connection to MySQL.
 
-# or use an explicit connection string
+```{r eval = FALSE} 
 con <- dbConnect(
   odbc::odbc(),
   .connection_string = "Driver={MySQL ODBC 5.3 ANSI Driver};user=root; password=mysqlroot; database=r_test"
 )
-cars = tbl(con, "mtcars")
+cars = tbl(con, "mtcars") %>%  collect()
+```
 
-cars = tbl(con_sql, "mtcars")
+The follwoing example connects to SQL Server on Windows
+
+```{r eval = FALSE}
+con = DBI::dbConnect(
+  odbc::odbc(),
+  Driver   = "SQL Server",
+  Server   = "DESKTOP-5JI7FPP",
+  Database = "rtest",
+  UID      = rstudioapi::askForPassword("Database user"),
+  PWD      = rstudioapi::askForPassword("Database password"),
+  Port     = 1433
+)
+
+cars = tbl(con, "mtcars") %>%  collect()
 
 ```
 
