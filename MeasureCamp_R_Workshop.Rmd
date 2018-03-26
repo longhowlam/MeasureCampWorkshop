@@ -597,6 +597,18 @@ cars = tbl(con, "mtcars") %>%  collect()
 The follwoing example connects to SQL Server on Windows
 
 ```{r eval = FALSE}
+# explicit password in script
+con = DBI::dbConnect(
+  odbc::odbc(),
+  Driver   = "SQL Server",
+  Server   = "DESKTOP-5JI7FPP",
+  Database = "rtest",
+  UID      = "sa",
+  PWD      = "sqlserverroot",
+  Port     = 1433
+)
+
+# using ask for password
 con = DBI::dbConnect(
   odbc::odbc(),
   Driver   = "SQL Server",
@@ -609,6 +621,7 @@ con = DBI::dbConnect(
 
 cars = tbl(con, "mtcars") %>%  collect()
 
+dbDisconnect(con)
 ```
 
 
