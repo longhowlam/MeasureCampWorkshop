@@ -790,6 +790,14 @@ out = filter(
   )
 ```
 
+
+The function `top_n`, selecting the top 4 rows form mtcars (based on the variable hp).
+
+```{r eval = FALSE}
+mtcars %>%  top_n(4, hp)
+```
+
+
 ### Window functions
 
 dplyr supports so-called SQL window functions. For example, determine per cyl value the ranking of hp.
