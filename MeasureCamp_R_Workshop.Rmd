@@ -1301,7 +1301,7 @@ Sometimes you want horizontal bar charts, to do plot that use a coordinate flip.
 test %>%
   ggplot(aes(x=keuken, y = n, fill=plaats)) + 
   geom_bar(stat="identity", position = "dodge") +
-   coord_flip()
+  coord_flip()
 ```
 
 ### geom_bin2d
@@ -2037,9 +2037,10 @@ testData = testData %>%
     )
   )
 
-
-hist(testData$ensemble_prediction, nclass = 25)
-hist(testData$glm_prediction, nclass = 25)
+## first impression of the scores of glm and tree ensemble model
+ggplot(testData, aes(ensemble_prediction)) +
+  geom_histogram(color="black", bins = 50) +
+  geom_histogram(aes(glm_prediction), alpha = 0.2, color = "green", bins = 50)
 
 ## if you have a score!!!
 testData %>% group_by(percGLM) %>%  summarise(target = mean(clm))
@@ -2082,8 +2083,8 @@ explainer = lime(
 ## now we can explain specific cases
 # Let's take two cases with high exposure and low exposure
 explain_cases = bind_rows( 
-  trainData %>% filter(exposure > 0.6) %>% slice(1:3),
-  trainData %>% filter(exposure < 0.1) %>% slice(1:3)
+  trainData %>% filter(exposure > 0.6) %>% slice(1:2),
+  trainData %>% filter(exposure < 0.1) %>% slice(1:2)
 )
 
 # explain the 6 cases in terms of the top 5 features
