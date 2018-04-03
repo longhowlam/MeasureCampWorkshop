@@ -2120,11 +2120,22 @@ Groceries = as(
 )
 Groceries
 
-## Item information
+## Visual Item information
 itemFrequencyPlot(Groceries, topN = 35, cex.names = 0.75)
+```
 
+Now that we have the groceries transactions in a transaction object we can calculate rules with the a-priori algorithm.
+
+```{r eval = FALSE}
 ## Calculate the rules
 rules = apriori(Groceries, parameter = list(supp = 0.001, conf = 0.8))
+
+## show some rules
+inspect(rules[1:10])
+inspect( sort(rules, by = "support")[1:10])
+
+## convert  rules set to a data frame
+rulesDF = DATAFRAME(rules)
 ```
 
 Now that you have calculated the rules you can filter the rules by items. So which rules contain certain products?
@@ -2132,7 +2143,7 @@ Now that you have calculated the rules you can filter the rules by items. So whi
 ```{r, eval = FALSE}
 rules.subset2 = subset(rules, lhs %in% c("cereals", "curd"))
 rules.subset2
-inspect(head(rules.subset2,n=15))
+inspect(head(rules.subset2, n=15))
 ```
 
 Or if someone has bought already certain items, what are the rules that correspond with those items, and which products can you then recommend?
