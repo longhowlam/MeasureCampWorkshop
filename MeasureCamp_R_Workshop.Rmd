@@ -1832,16 +1832,16 @@ We use insurance data from the library `insuranceData` to demonstrate classifica
 
 Variables:
 
-* veh_value	vehicle value, in $10,000s
-* exposure	0-1  indication of how much the car has driven
-* clm		occurrence of claim (0 = no, 1 = yes)
-* numclaims	number of claims
-* claimcst0	claim amount (0 if no claim)
-* veh_body	vehicle body, for example hatchback, minivan etc.
-* veh_age	age of vehicle: 1 (youngest), 2, 3, 4
-* gender		gender of driver: M, F
-* area		driver's area of residence: A, B, C, D, E, F
-* agecat		driver's age category: 1 (youngest), 2, 3, 4, 5, 6
+* veh_value	 vehicle value, in $10,000s
+* exposure   0-1  indication of how much the car has driven
+* clm        occurrence of claim (0 = no, 1 = yes)
+* numclaims  number of claims
+* claimcst0  claim amount (0 if no claim)
+* veh_body   vehicle body, for example hatchback, minivan etc.
+* veh_age    age of vehicle: 1 (youngest), 2, 3, 4
+* gender     gender of driver: M, F
+* area       driver's area of residence: A, B, C, D, E, F
+* agecat     driver's age category: 1 (youngest), 2, 3, 4, 5, 6
 
 ```{r, eval=FALSE}
 ### libraries needed
