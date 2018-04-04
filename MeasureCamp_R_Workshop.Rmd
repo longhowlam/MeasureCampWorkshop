@@ -469,6 +469,7 @@ df1 = data.frame(
   income = x2,
   age = x3,
   type = x4
+ #, stringsAsFactors = FALSE
 )
 
 # laat eerste 10 rijen zien
@@ -488,29 +489,25 @@ names(df2) = c("A", "B", "C", "D")
 # dimensie en classe
 dim(df1)
 class(df1)
-
-# De levels van kolom 'type' uit mydf
-levels(mydf$type)
-
-### pas op met characters die worden standaard in data.frame naar factors omgezet
-x4
-class(x4)
-class(df1$type)
-
-mydf = data.frame(
-  kolomnaampj1 = x1, 
-  income = x2, 
-  age = x3,
-  type = x4,
-  stringsAsFactors = FALSE
-)
-mydf
-
-class(mydf$type)
-
-## Dit is ook in de Environment viewer te zien
 ```
 
+To get a first impression of the data inside a data.frame you can use the functions `summary` or `skimr` (which is in the skimr package that needs to be installed).
+
+```{r, eval = FALSE}
+summary(mtcars)
+summary(iris)
+```
+
+install `skimr` first.
+
+```{r, eval = FALSE}
+devtools::install_github("hadley/colformat")
+devtools::install_github("ropenscilabs/skimr")
+
+library(skimr)
+skim(mtcars)
+skim(df1)
+```
 
 Just like with matrices, you can use subscripts in data frames to extract certain parts from a data frame.
 
