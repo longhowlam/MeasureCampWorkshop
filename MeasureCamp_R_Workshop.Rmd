@@ -1492,6 +1492,10 @@ m2 = m2 %>%
 m2
 ```
 
+popup texts in leaflets can also contain images and animated images. See as an example [this leaflet of Amsterdam](http://www.lhldsd.nl/AmsterdamWijkenOverzichtAnimated.html)
+
+
+
 ## visnetwork
 
 The `visnetwork` package can be used to create interactive graph (network) visualizations. You need two data frames, one with the nodes (also called vertices) and one with the edges (links). Let's start with a simple example.
