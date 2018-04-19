@@ -990,9 +990,16 @@ Character data (strings) in R can be manipulated with the `stringr` package. Bef
 
 Regular expressions are a sort of 'mini' language to specify character patterns, so that you can search on those patterns in texts. First create some dummy character data.
 
-
 ```{r, eval=FALSE}
-test = c("Mijn nummer is 06-12345678", "dit is .. een 1628EP postcode test", "foutje?:  0234XD", "dit is er nog een 1628 EP", "en nog een foute 126EP", "nog een 1234    XX", "1234eZ en nog 4567PK", "12345 Aabcde", "&yfy.")
+test = c(
+  "Mijn nummer is 06-12345678", 
+  "dit is .. een 1628EP postcode test",
+  "foutje?:  0234XD", "dit is er nog een 1628 EP",
+  "en nog een foute 126EP",
+  "nog een 1234    XX", 
+  "1234eZ en nog 4567PK", 
+  "12345 Aabcde", "&yfy."
+)
 test
 ```
 
@@ -1363,7 +1370,6 @@ restaurants %>% filter(prijs < 100) %>%
 
 There is a nice 'cheat sheet' for ggplot2, it contains a concise overview of the various possibilities and geom functions. The sheet can be found on [ggplot2 cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
-
 ## plotly
 
 In addition to the statistical graphs we have made with ggplot2, you can also create interactive graphs in R. We give a number of examples in the following code chunks.
@@ -1517,16 +1523,21 @@ visNetwork(nodes, edges)
 To alter the appearance of the graph several options can be provided trough the nodes and edges data frames.
 
 ```{r, eval=FALSE}
+### NODES data set
 nodes = data.frame(
   id = 1:10,
   label = paste("Node", 1:10),                                   # labels
   group = c("GrA", "GrB"),                                       # groups
   value = 1:10,                                                  # size
-  shape = c("square", "triangle", "box", "circle", "dot", "star", "ellipse", "database", "text", "diamond"),    # shape
+  shape = c(
+    "square", "triangle", "box", "circle",
+    "dot", "star", "ellipse", "database", "text", "diamond"
+  ),                                                             # shape
   title = paste0("<p><b>", 1:10,"</b><br>Node !</p>"),           # tooltip
   color = c("darkred", "grey", "orange", "darkblue", "purple"),  # color
   shadow = c(FALSE, TRUE, FALSE, TRUE, TRUE))                    # shadow
 
+### EDGES data set
 edges = data.frame(from = sample(1:10,8), to = sample(1:10, 8),
   label = paste("Edge", 1:8),                                    # labels
   length = c(100,500),                                           # length
@@ -1539,7 +1550,7 @@ edges = data.frame(from = sample(1:10,8), to = sample(1:10, 8),
 visNetwork(nodes, edges)
 ```
 
-Other options can be given via the `visnetwork` function. For example, highlight nearest:
+Other options can be given via the `visnetwork` function. For example, highlight nearest and node selection:
 
 ```{r, eval=FALSE}
 nodes = data.frame(
